@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   recipePost: {
-    marginHorizontal: spacing.sm,
+    margin: spacing.sm,
   },
 });
 
