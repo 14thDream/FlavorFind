@@ -10,7 +10,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RecipePost from "../components/RecipePost";
 
 import { spacing, fonts } from "../styles";
-import Data from "../tests/mock";
+import DATA from "../tests/mock";
 
 const HomeScreen = () => {
   return (
@@ -21,7 +21,7 @@ const HomeScreen = () => {
         <FontAwesome name="search" size={24} color="black" />
       </View>
       <FlatList
-        data={Data}
+        data={DATA}
         renderItem={({ item }) => (
           <View style={styles.recipePost}>
             <RecipePost
