@@ -1,7 +1,16 @@
-import { StyleSheet, SafeAreaView, View, Text, TextInput } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  FlatList,
+} from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import RecipePost from "../components/RecipePost";
 
 import { spacing, fonts } from "../styles";
+import Data from "../tests/mock";
 
 const HomeScreen = () => {
   return (
@@ -11,6 +20,18 @@ const HomeScreen = () => {
         <TextInput style={styles.headerSearchBar} placeholder="Search Recipe" />
         <FontAwesome name="search" size={24} color="black" />
       </View>
+      <FlatList
+        data={Data}
+        renderItem={({ item }) => (
+          <View style={styles.recipePost}>
+            <RecipePost
+              username={item.username}
+              title={item.title}
+              uri={item.uri}
+            />
+          </View>
+        )}
+      />
     </SafeAreaView>
   );
 };
@@ -23,6 +44,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     margin: spacing.xs,
+    marginBottom: spacing.md,
     gap: spacing.sm,
   },
   headerText: {
@@ -32,6 +54,9 @@ const styles = StyleSheet.create({
   },
   headerSearchBar: {
     flex: 1,
+  },
+  recipePost: {
+    marginHorizontal: spacing.sm,
   },
 });
 
