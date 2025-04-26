@@ -54,7 +54,9 @@ const styles = StyleSheet.create({
   },
   headerSearchBar: {
     flex: 1,
+    paddingHorizontal: spacing.xs,
     fontFamily: fonts.primary,
+    borderWidth: 1,
   },
   recipePost: {
     margin: spacing.sm,
