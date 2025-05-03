@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { db, ref, set } from "../firebaseConfig";
 import { get, child } from "firebase/database";
 import { getId } from "firebase/installations";
@@ -11,26 +19,35 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.head_text}>Sign in to FlavorFind</Text>
-      <Text style={styles.label}>Email Address</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Email Address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Password"
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button
-        title="Sign In"
-        onPress={() => verifyLogin(email.toLowerCase(), password)}
-        color="#6200ea"
-      />
+      <View style={styles.container2}>
+        <Text style={styles.title_text}>FlavorFind</Text>
+        <Text style={styles.secondary_title_text}>Login</Text>
+
+        <View style={styles.input_box}>
+          <Text style={styles.label}>Email Address</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Email Address"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+
+        <Text style={styles.label}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Password"
+          value={password}
+          onChangeText={setPassword}
+        />
+
+        <TouchableOpacity
+          style={styles.sign_in}
+          onPress={() => verifyLogin(email.toLowerCase(), password)}
+        >
+          <Text style={styles.sign_in_text}>LOGIN</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -39,9 +56,7 @@ const verifyLogin = async (email, password) => {
   const currEmail = email.toLowerCase();
   const db = getDatabase();
   const dbRef = ref(db);
-
   const snapshot = await get(child(dbRef, "users"));
-
   if (snapshot.exists()) {
     const users = snapshot.val();
     const foundUser = Object.values(users).find(
@@ -59,57 +74,78 @@ const verifyLogin = async (email, password) => {
     }
   }
 };
-
-const checkIfEmailExisting = async (email) => {
-  try {
-    const snapshot = await get(child(ref(db), "users"));
-    if (snapshot.exists()) {
-      const users = snapshot.val(); // Get all users from the snapshot
-      const emailExists = Object.values(users).some(
-        (user) => user.email === email
-      );
-
-      if (emailExists) {
-        //Alert.alert("Email found within the database: " + email);
-        return true;
-      } else {
-        // Alert.alert("Email not found within the database: " + email);
-        return false;
-      }
-    }
-  } catch (error) {
-    console.error("Error checking email: ", error);
-    // Alert.alert("Error", "Failed to check email");
-  }
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "grey",
     justifyContent: "center",
-    alightItems: "center",
+    alignItems: "center", // was misspelled as alightItems
   },
-  label: {
-    fontSize: 18,
+
+  container2: {
+    backgroundColor: "white",
+    height: "60%",
+    width: "100%",
+    borderRadius: 40,
+    padding: 20,
+    justifyContent: "center",
+    flex: 1,
+  },
+
+  title_text: {
+    fontSize: 36,
+    textAlign: "center",
     fontWeight: "bold",
+    color: "#333",
     marginBottom: 10,
   },
-  head_text: {
-    fontSize: 24,
+
+  secondary_title_text: {
+    fontSize: 28,
+    textAlign: "left",
     fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-    color: "red",
+    color: "#444",
+    marginBottom: 30,
   },
+
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#222",
+  },
+
+  input_box: {
+    marginBottom: 20,
+  },
+
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
+    borderColor: "#888",
+    borderRadius: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     backgroundColor: "#fff",
-    marginBottom: 20,
+    fontSize: 16,
+  },
+
+  sign_in: {
+    height: 50,
+    width: 100,
+    backgroundColor: "#FFDB64",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+
+  sign_in_text: {
+    fontFamily: "Oswald",
+    fontSize: 20,
+    color: "black",
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });
 
