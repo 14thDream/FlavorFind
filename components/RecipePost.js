@@ -7,8 +7,8 @@ import { colors, fonts, spacing } from "../styles";
 const RecipePost = ({ username, title, uri }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>@{username}</Text>
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, styles.usernameText]}>@{username}</Text>
+      <Text style={[styles.text, styles.titleText]}>{title}</Text>
       <Image style={styles.image} source={{ uri: uri }} />
       <View style={styles.bar}>
         <BasicButton>
@@ -25,7 +25,7 @@ const RecipePost = ({ username, title, uri }) => {
 const styles = StyleSheet.create({
   container: {
     width: "1fr",
-    height: 286,
+    minHeight: 286,
     borderRadius: 10,
     backgroundColor: colors.primary,
     paddingVertical: spacing.xs,
@@ -35,6 +35,12 @@ const styles = StyleSheet.create({
     fontSize: fonts.sm,
     fontWeight: "bold",
     marginHorizontal: spacing.sm,
+  },
+  usernameText: {
+    marginVertical: spacing.xs,
+  },
+  titleText: {
+    fontSize: fonts.md,
   },
   image: {
     width: "1fr",
