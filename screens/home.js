@@ -6,7 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import RecipePost from "../components/RecipePost";
 
-import { spacing, fonts } from "../styles";
+import { spacing, fonts, colors } from "../styles";
 import DATA from "../tests/mock";
 
 const containsKeyword = (title, keyword) => {
@@ -62,13 +62,15 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    margin: spacing.xs,
     marginBottom: spacing.sm,
+    padding: spacing.xs,
     gap: spacing.sm,
+    backgroundColor: colors.primary,
   },
   headerText: {
     fontFamily: fonts.primary,

@@ -1,5 +1,6 @@
 export const colors = {
-  primary: "#FFDB64",
+  primary: "#FFFFFF",
+  background: "#FFD95F",
 };
 
 export const spacing = {
