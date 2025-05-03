@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  SafeAreaView,
   View,
   Text,
   TextInput,
@@ -28,7 +27,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>FlavorFind</Text>
         <TextInput
@@ -50,7 +49,7 @@ const HomeScreen = () => {
           </View>
         )}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
