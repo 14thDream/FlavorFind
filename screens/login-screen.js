@@ -3,15 +3,7 @@ import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
 import { db, ref, set } from "../firebaseConfig";
 import { get, child } from "firebase/database";
 import { getId } from "firebase/installations";
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
-
-const findUserByEmail = async (email) => {};
+import { getDatabase } from "firebase/database";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -19,7 +11,7 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.head_text}>FlavorFind User Sign In</Text>/
+      <Text style={styles.head_text}>Sign in to FlavorFind</Text>
       <Text style={styles.label}>Email Address</Text>
       <TextInput
         style={styles.input}
@@ -35,12 +27,37 @@ const LoginScreen = () => {
         onChangeText={setPassword}
       />
       <Button
-        title="Add Data"
-        onPress={() => checkIfEmailExisting(email)}
+        title="Sign In"
+        onPress={() => verifyLogin(email.toLowerCase(), password)}
         color="#6200ea"
       />
     </View>
   );
+};
+
+const verifyLogin = async (email, password) => {
+  const currEmail = email.toLowerCase();
+  const db = getDatabase();
+  const dbRef = ref(db);
+
+  const snapshot = await get(child(dbRef, "users"));
+
+  if (snapshot.exists()) {
+    const users = snapshot.val();
+    const foundUser = Object.values(users).find(
+      (user) => user.email === currEmail && user.password === password
+    );
+
+    if (foundUser) {
+      Alert.alert(
+        "Login successful, Welcome back, " + foundUser.firstName + "!"
+      );
+    } else {
+      Alert.alert(
+        "Login failed, Incorrect password or Email. Please try again."
+      );
+    }
+  }
 };
 
 const checkIfEmailExisting = async (email) => {
@@ -50,26 +67,19 @@ const checkIfEmailExisting = async (email) => {
       const users = snapshot.val(); // Get all users from the snapshot
       const emailExists = Object.values(users).some(
         (user) => user.email === email
-      ); // Check if any user has the same email
+      );
+
       if (emailExists) {
-        Alert.alert("Email found within the database: " + email);
+        //Alert.alert("Email found within the database: " + email);
         return true;
       } else {
-        Alert.alert("Email not found within the database: " + email);
+        // Alert.alert("Email not found within the database: " + email);
         return false;
       }
     }
   } catch (error) {
     console.error("Error checking email: ", error);
-    Alert.alert("Error", "Failed to check email");
-  }
-};
-
-const checkIfCorrectPassword = async (email, password) => {
-  try {
-  } catch (error) {
-    console.error("Error checking password: ", error);
-    Alert.alert("Error", "Failed to check password");
+    // Alert.alert("Error", "Failed to check email");
   }
 };
 
