@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import HomeScreen from "./screens/home";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function App() {
+const Tab = createBottomTabNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarLabelStyle: { textTransform: "uppercase" },
+          tabBarIcon: ({ size }) => {
+            let iconName;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+            switch (route.name) {
+              case "My Recipes":
+                iconName = "restaurant";
+                break;
+              case "Create":
+                iconName = "add";
+                break;
+              case "Profile":
+                iconName = "person";
+                break;
+              default:
+                iconName = "home";
+            }
+
+            return <Ionicons name={iconName} size={size} color="black" />;
+          },
+        })}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="My Recipes" component={HomeScreen} />
+        <Tab.Screen name="Create" component={HomeScreen} />
+        <Tab.Screen name="Profile" component={HomeScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
