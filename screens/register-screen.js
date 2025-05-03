@@ -13,7 +13,7 @@ const RegisterScreen = () => {
 
   const addDataToRealtimeDatabase = async () => {
     const nextId = await getIdCount(); // Get the next available ID
-    const emailExists = await checkIfEmailExisting(email); // Check if email already exists
+    const emailExists = await checkIfEmailExisting(email.toLowerCase()); // Check if email already exists
     if (emailExists) {
       Alert.alert(
         "Error",
@@ -37,7 +37,7 @@ const RegisterScreen = () => {
         id: nextId,
         firstName: firstName,
         lastName: lastName,
-        email: email,
+        email: email.toLowerCase(),
         password: password,
         createdAt: new Date().toISOString(),
       });
