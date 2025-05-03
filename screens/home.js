@@ -43,6 +43,7 @@ const HomeScreen = () => {
         <FontAwesome name="search" size={24} color="black" />
       </View>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={posts}
         renderItem={({ item }) => (
           <View style={styles.recipePost}>
