@@ -12,10 +12,37 @@ import { db, ref, set } from "../firebaseConfig";
 import { get, child } from "firebase/database";
 import { getId } from "firebase/installations";
 import { getDatabase } from "firebase/database";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigation = useNavigation();
+
+  const verifyLogin = async (email, password) => {
+    const currEmail = email.toLowerCase();
+    const db = getDatabase();
+    const dbRef = ref(db);
+    const snapshot = await get(child(dbRef, "users"));
+    if (snapshot.exists()) {
+      const users = snapshot.val();
+      const foundUser = Object.values(users).find(
+        (user) => user.email === currEmail && user.password === password
+      );
+
+      if (foundUser) {
+        Alert.alert(
+          "Login successful, Welcome back, " + foundUser.firstName + "!"
+        );
+        navigation.navigate("Tabs");
+      } else {
+        Alert.alert(
+          "Login failed, Incorrect password or Email. Please try again."
+        );
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -52,28 +79,6 @@ const LoginScreen = () => {
   );
 };
 
-const verifyLogin = async (email, password) => {
-  const currEmail = email.toLowerCase();
-  const db = getDatabase();
-  const dbRef = ref(db);
-  const snapshot = await get(child(dbRef, "users"));
-  if (snapshot.exists()) {
-    const users = snapshot.val();
-    const foundUser = Object.values(users).find(
-      (user) => user.email === currEmail && user.password === password
-    );
-
-    if (foundUser) {
-      Alert.alert(
-        "Login successful, Welcome back, " + foundUser.firstName + "!"
-      );
-    } else {
-      Alert.alert(
-        "Login failed, Incorrect password or Email. Please try again."
-      );
-    }
-  }
-};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
