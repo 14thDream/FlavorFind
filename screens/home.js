@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  FlatList,
-} from "react-native";
+import { StyleSheet, View, Text, TextInput, FlatList } from "react-native";
 import { useState } from "react";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -15,18 +9,25 @@ import RecipePost from "../components/RecipePost";
 import { spacing, fonts } from "../styles";
 import DATA from "../tests/mock";
 
-const isTitleSearchableFrom = (title, searchText) => {
-  return searchText
+const containsKeyword = (title, keyword) => {
+  return title
     .toLowerCase()
     .split(" ")
-    .every((word) => title.toLowerCase().includes(word));
+    .some((word) => word.startsWith(keyword));
+};
+
+const isSearchableBy = (title, keywords) => {
+  return keywords
+    .toLowerCase()
+    .split(" ")
+    .every((keyword) => containsKeyword(title, keyword));
 };
 
 const HomeScreen = () => {
   const [posts, setPosts] = useState(DATA);
 
-  const handleChangeSearchText = (text) => {
-    setPosts(DATA.filter(({ title }) => isTitleSearchableFrom(title, text)));
+  const handleChangeSearchText = (keywords) => {
+    setPosts(DATA.filter(({ title }) => isSearchableBy(title, keywords)));
   };
 
   return (
