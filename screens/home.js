@@ -6,7 +6,10 @@ import {
   FlatList,
 } from "react-native";
 import { useState } from "react";
+
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Ionicons from "@expo/vector-icons/Ionicons";
+
 import RecipePost from "../components/RecipePost";
 
 import { spacing, fonts } from "../styles";
@@ -29,6 +32,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
+        <Ionicons name="menu" size={24} color="black" />
         <Text style={styles.headerText}>FlavorFind</Text>
         <TextInput
           style={styles.headerSearchBar}
