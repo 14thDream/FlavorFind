@@ -1,7 +1,27 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Alert,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { db, ref, set } from "../firebaseConfig";
 import { get, child } from "firebase/database";
+import { colors, spacing, fonts } from "../styles";
+
+import {
+  PoetsenOne_400Regular,
+  useFonts,
+} from "@expo-google-fonts/poetsen-one";
+import { Oswald_400Regular } from "@expo-google-fonts/oswald";
+import { useEffect } from "react";
+import * as SplashScreen from "expo-splash-screen";
+import { useNavigation } from "@react-navigation/native";
 
 const getNextId = async () => {
   const snapshot = await get(child(ref(db), "users"));
@@ -31,11 +51,31 @@ const checkIfEmailExisting = async (email) => {
   }
 };
 
+SplashScreen.preventAutoHideAsync();
+
 const RegisterScreen = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const navigator = useNavigation();
+
+  const [loaded, error] = useFonts({
+    PoetsenOne_400Regular,
+    Oswald_400Regular,
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
 
   const addDataToRealtimeDatabase = async () => {
     const id = await getNextId(); // Get the next available ID
@@ -59,6 +99,11 @@ const RegisterScreen = () => {
       return;
     }
 
+    if (password.trim() !== confirmPassword.trim()) {
+      Alert.alert("Error", "Password does not match.");
+      return;
+    }
+
     try {
       await set(ref(db, `users/${id}`), {
         id: id,
@@ -79,42 +124,62 @@ const RegisterScreen = () => {
     }
   };
 
+  const Background = require("../assets/images/authentication-background.jpg");
+
   return (
     <View style={styles.container}>
-      <Text style={styles.head_text}>FlavorFind User Registration</Text>/
-      <Text style={styles.label}>First Name:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      <Text style={styles.label}>Last Name:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      <Text style={styles.label}>Email Address</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Email Address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Password"
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button
-        title="Add Data"
-        onPress={() => addDataToRealtimeDatabase()}
-        color="#6200ea"
-      />
+      <ImageBackground
+        source={Background}
+        style={styles.background}
+        imageStyle={styles.backgroundImage}
+      >
+        <Pressable style={styles.backButton} onPress={() => navigator.goBack()}>
+          <MaterialCommunityIcons
+            name="chevron-double-left"
+            size={48}
+            color="black"
+          />
+        </Pressable>
+        <View style={styles.card}>
+          <Text style={styles.logoText}>FlavorFind</Text>
+          <Text style={styles.signUpText}>Sign Up</Text>
+          <View style={styles.inputGroup}>
+            <TextInput
+              placeholder="first name"
+              onChangeText={setFirstName}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="last name"
+              onChangeText={setLastName}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="email"
+              onChangeText={setEmail}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="password"
+              secureTextEntry
+              onChangeText={setPassword}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="confirm password"
+              secureTextEntry
+              onChangeText={setConfirmPassword}
+              style={styles.input}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={addDataToRealtimeDatabase}
+            style={styles.signUpButton}
+          >
+            <Text style={styles.signUpButtonText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
     </View>
   );
 };
@@ -122,29 +187,72 @@ const RegisterScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: colors.background,
+  },
+  background: {
+    width: "100%",
+    height: "100%",
+    paddingHorizontal: spacing.sm,
     justifyContent: "center",
+    alignItems: "center",
   },
-  label: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
+  backgroundImage: {
+    opacity: 0.2,
   },
-  head_text: {
-    fontSize: 24,
+  card: {
+    width: "100%",
+    opacity: 1,
+    alignItems: "center",
+    backgroundColor: colors.primary,
+    borderRadius: 20,
+  },
+  logoText: {
+    marginTop: spacing.xl,
+    fontSize: 48,
+    fontFamily: fonts.primary,
     fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-    color: "red",
+  },
+  signUpText: {
+    alignSelf: "flex-start",
+    marginHorizontal: spacing.lg,
+    marginVertical: spacing.md,
+    fontSize: 40,
+    fontFamily: fonts.stylized,
+  },
+  inputGroup: {
+    alignSelf: "stretch",
+    marginHorizontal: spacing.lg,
+    gap: spacing.sm,
   },
   input: {
+    alignSelf: "stretch",
+    height: 40,
+    paddingHorizontal: spacing.sm,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
-    backgroundColor: "#fff",
-    marginBottom: 20,
+    borderRadius: 10,
+    fontSize: 20,
+    fontFamily: fonts.body,
+  },
+  signUpButton: {
+    height: 40,
+    alignSelf: "stretch",
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.md,
+    marginBottom: 200,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.background,
+  },
+  signUpButtonText: {
+    fontSize: 20,
+    fontFamily: fonts.body,
+  },
+  backButton: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
 
