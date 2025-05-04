@@ -118,6 +118,7 @@ const RegisterScreen = () => {
       setLastName("");
       setEmail("");
       setPassword("");
+      navigator.goBack();
     } catch (error) {
       console.error("Error adding document: ", error);
       Alert.alert("Error", "Failed to add data");
