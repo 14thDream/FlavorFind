@@ -2,7 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import HomeScreen from "./screens/home";
+import HomeScreen from "./screens/home-screen";
 import LoginScreen from "./screens/login-screen";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -36,7 +36,7 @@ const Main = () => {
         tabBarIcon: ({ focused, size }) => {
           const iconName = focused
             ? routeIcons[route.name]
-            : `${routeIcons[route.name]}-outline}`;
+            : `${routeIcons[route.name]}-outline`;
           return <Ionicons name={iconName} size={size} color="black" />;
         },
       })}
