@@ -6,10 +6,12 @@ import {
   Alert,
   StyleSheet,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { db, ref } from "../firebaseConfig";
 import { get, child } from "firebase/database";
 import { useNavigation } from "@react-navigation/native";
+import { spacing, colors } from "../styles";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -68,6 +70,12 @@ const LoginScreen = () => {
         >
           <Text style={styles.signInText}>Login</Text>
         </TouchableOpacity>
+        <View style={styles.noAccount}>
+          <Text>Don't have an account?</Text>
+          <Pressable onPress={() => navigator.navigate("Register")}>
+            <Text style={styles.registerText}>Register Now</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -138,6 +146,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textTransform: "uppercase",
     fontWeight: "bold",
+  },
+  noAccount: {
+    flexDirection: "row",
+    alignSelf: "flex-end",
+    marginTop: spacing.sm,
+  },
+  registerText: {
+    marginLeft: spacing.xs,
+    color: colors.link,
   },
 });
 

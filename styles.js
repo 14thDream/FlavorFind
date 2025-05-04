@@ -1,6 +1,7 @@
 export const colors = {
   primary: "#FFFFFF",
   background: "#FFD95F",
+  link: "#0051FF",
 };
 
 export const spacing = {

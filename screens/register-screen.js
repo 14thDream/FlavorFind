@@ -79,58 +79,6 @@ const RegisterScreen = () => {
     }
   };
 
-<<<<<<< HEAD
-  const checkIfExisting = async (id) => {
-    if (!id) return false;
-    const snapshot = await get(child(ref(db), `users/${id}`));
-    if (snapshot.exists()) return true;
-    return false;
-  };
-
-  //Bad bad bad code, but it works for now. As long as we dont delete any users, it will work.
-  const getIdCount = async () => {
-    try {
-      const snapshot = await get(child(ref(db), "users"));
-      if (snapshot.exists()) {
-        const users = snapshot.val();
-        let nextId = Object.keys(users).length + 1; // Start with user count + 1
-        // Keep incrementing if ID already exists
-        while (await checkIfExisting(nextId.toString())) {
-          nextId += 1;
-        }
-        return nextId;
-      } else {
-        return 1;
-      }
-    } catch (error) {
-      console.error("Error fetching user count: ", error);
-      Alert.alert("Error", "Failed to fetch user count");
-      return null;
-    }
-  };
-
-  const checkIfEmailExisting = async (email) => {
-    try {
-      const snapshot = await get(child(ref(db), "users"));
-      if (snapshot.exists()) {
-        const users = snapshot.val(); // Get all users from the snapshot
-        const emailExists = Object.values(users).some(
-          (user) => user.email === email,
-        ); // Check if any user has the same email
-        if (emailExists) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    } catch (error) {
-      console.error("Error checking email: ", error);
-      Alert.alert("Error", "Failed to check email");
-    }
-  };
-
-=======
->>>>>>> origin/register-screen-alternative
   return (
     <View style={styles.container}>
       <Text style={styles.head_text}>FlavorFind User Registration</Text>/
