@@ -113,15 +113,15 @@ const RegisterScreen = () => {
         password: password,
         createdAt: new Date().toISOString(),
       });
-      Alert.alert("Success", "Data added successfully!");
+      Alert.alert("Success", "User added successfully!");
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
       navigator.goBack();
     } catch (error) {
-      console.error("Error adding document: ", error);
-      Alert.alert("Error", "Failed to add data");
+      console.error("Error adding user: ", error);
+      Alert.alert("Error", "Failed to add user");
     }
   };
 
