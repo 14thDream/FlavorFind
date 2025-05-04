@@ -17,7 +17,7 @@ const RegisterScreen = () => {
     if (emailExists) {
       Alert.alert(
         "Error",
-        "Email already exists. Please use a different email."
+        "Email already exists. Please use a different email.",
       );
       return;
     }
@@ -88,7 +88,7 @@ const RegisterScreen = () => {
       if (snapshot.exists()) {
         const users = snapshot.val(); // Get all users from the snapshot
         const emailExists = Object.values(users).some(
-          (user) => user.email === email
+          (user) => user.email === email,
         ); // Check if any user has the same email
         if (emailExists) {
           return true;

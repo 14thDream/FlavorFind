@@ -28,17 +28,17 @@ const LoginScreen = () => {
     if (snapshot.exists()) {
       const users = snapshot.val();
       const foundUser = Object.values(users).find(
-        (user) => user.email === currEmail && user.password === password
+        (user) => user.email === currEmail && user.password === password,
       );
 
       if (foundUser) {
         Alert.alert(
-          "Login successful, Welcome back, " + foundUser.firstName + "!"
+          "Login successful, Welcome back, " + foundUser.firstName + "!",
         );
         navigation.navigate("Tabs");
       } else {
         Alert.alert(
-          "Login failed, Incorrect password or Email. Please try again."
+          "Login failed, Incorrect password or Email. Please try again.",
         );
       }
     }
