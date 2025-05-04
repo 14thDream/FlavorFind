@@ -1,22 +1,10 @@
-import React from "react";
-import RegisterScreen from "./screens/register-screen";
-import LoginScreen from "./screens/login-screen";
-import {
-  Button,
-  Alert,
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "./screens/home";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import LoginScreen from "./screens/login-screen";
+
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const Stack = createNativeStackNavigator();
@@ -31,13 +19,13 @@ const App = () => {
           component={LoginScreen}
           options={{ headerShown: false }} // This removes the default header
         />
-        <Stack.Screen name="Tabs" component={Tabs} />
+        <Stack.Screen name="Main" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-const Tabs = () => {
+const Main = () => {
     return <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
