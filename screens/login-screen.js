@@ -7,15 +7,31 @@ import {
   StyleSheet,
   TouchableOpacity,
   Pressable,
+  ImageBackground,
 } from "react-native";
 import { db, ref } from "../firebaseConfig";
 import { get, child } from "firebase/database";
 import { useNavigation } from "@react-navigation/native";
-import { spacing, colors } from "../styles";
+import { spacing, colors, fonts } from "../styles";
+
+import {
+  PoetsenOne_400Regular,
+  useFonts,
+} from "@expo-google-fonts/poetsen-one";
+import { Oswald_400Regular } from "@expo-google-fonts/oswald";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+
+SplashScreen.preventAutoHideAsync();
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loaded, error] = useFonts({
+    PoetsenOne_400Regular,
+    Oswald_400Regular,
+  });
 
   const navigator = useNavigation();
 
@@ -42,41 +58,57 @@ const LoginScreen = () => {
     }
   };
 
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+
+  const Background = require("../assets/images/authentication-background.jpg");
+
   return (
     <View style={styles.container}>
-      <View style={styles.container2}>
-        <Text style={styles.titleText}>FlavorFind</Text>
-        <Text style={styles.secondaryTitleText}>Login</Text>
-
-        <View style={styles.inputBox}>
-          <Text style={styles.label}>Email Address</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Email Address"
-            onChangeText={setEmail}
-          />
+      <ImageBackground
+        source={Background}
+        style={styles.background}
+        imageStyle={styles.backgroundImage}
+      >
+        <View style={styles.card}>
+          <Text style={styles.logoText}>FlavorFind</Text>
+          <Text style={styles.loginText}>Login</Text>
+          <View style={styles.inputGroup}>
+            <TextInput
+              placeholder="email"
+              onChangeText={setEmail}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="password"
+              secureTextEntry
+              onChangeText={setPassword}
+              style={styles.input}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => verifyLogin(email, password)}
+            style={styles.loginButton}
+          >
+            <Text style={styles.loginButtonText}>Login</Text>
+          </TouchableOpacity>
+          <View style={styles.noAccount}>
+            <Text style={styles.noAccountText}>Don't have an account?</Text>
+            <Pressable onPress={() => navigator.navigate("Register")}>
+              <Text style={[styles.noAccountText, styles.signUpText]}>
+                Sign Up
+              </Text>
+            </Pressable>
+          </View>
         </View>
-
-        <Text style={styles.label}>Password</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Password"
-          onChangeText={setPassword}
-        />
-
-        <TouchableOpacity
-          style={styles.signIn}
-          onPress={() => verifyLogin(email.toLowerCase(), password)}
-        >
-          <Text style={styles.signInText}>Login</Text>
-        </TouchableOpacity>
-        <View style={styles.noAccount}>
-          <Text>Don't have an account?</Text>
-          <Pressable onPress={() => navigator.navigate("Register")}>
-            <Text style={styles.registerText}>Register Now</Text>
-          </Pressable>
-        </View>
-      </View>
+      </ImageBackground>
     </View>
   );
 };
@@ -84,75 +116,79 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "grey",
+    backgroundColor: colors.background,
+  },
+  background: {
+    width: "100%",
+    height: "100%",
+    paddingHorizontal: spacing.sm,
     justifyContent: "center",
     alignItems: "center",
   },
-  container2: {
-    backgroundColor: "white",
-    height: "60%",
+  backgroundImage: {
+    opacity: 0.2,
+  },
+  card: {
     width: "100%",
-    borderRadius: 40,
-    padding: 20,
-    justifyContent: "center",
-    flex: 1,
+    opacity: 1,
+    alignItems: "center",
+    backgroundColor: colors.primary,
+    borderRadius: 20,
   },
-  titleText: {
-    fontSize: 36,
-    textAlign: "center",
+  logoText: {
+    marginTop: spacing.xl,
+    fontSize: 48,
+    fontFamily: fonts.primary,
     fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
   },
-  secondaryTitleText: {
-    fontSize: 28,
-    textAlign: "left",
-    fontWeight: "bold",
-    color: "#444",
-    marginBottom: 30,
+  loginText: {
+    alignSelf: "flex-start",
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.md + spacing.sm,
+    marginBottom: spacing.md,
+    fontSize: 40,
+    fontFamily: fonts.stylized,
   },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 8,
-    color: "#222",
-  },
-  inputBox: {
-    marginBottom: 20,
+  inputGroup: {
+    alignSelf: "stretch",
+    marginHorizontal: spacing.lg,
+    gap: spacing.sm,
   },
   input: {
+    alignSelf: "stretch",
+    height: 40,
+    paddingHorizontal: spacing.sm,
     borderWidth: 1,
-    borderColor: "#888",
-    borderRadius: 15,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    backgroundColor: "#fff",
-    fontSize: 16,
-  },
-  signIn: {
-    height: 50,
-    width: 100,
-    backgroundColor: "#FFDB64",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
-  },
-  signInText: {
-    fontFamily: "Oswald",
+    borderRadius: 10,
     fontSize: 20,
-    color: "black",
-    textAlign: "center",
+    fontFamily: fonts.body,
+  },
+  loginButton: {
+    height: 40,
+    alignSelf: "stretch",
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.lg + spacing.md,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.background,
+  },
+  loginButtonText: {
+    fontSize: 20,
+    fontFamily: fonts.body,
     textTransform: "uppercase",
-    fontWeight: "bold",
   },
   noAccount: {
     flexDirection: "row",
     alignSelf: "flex-end",
-    marginTop: spacing.sm,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.xs,
+    marginBottom: 60,
   },
-  registerText: {
+  noAccountText: {
+    fontSize: 18,
+    fontFamily: fonts.body,
+  },
+  signUpText: {
     marginLeft: spacing.xs,
     color: colors.link,
   },
