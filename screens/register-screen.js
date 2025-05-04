@@ -2,18 +2,45 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
 import { db, ref, set } from "../firebaseConfig";
 import { get, child } from "firebase/database";
-import { getId } from "firebase/installations";
+
+const getNextId = async () => {
+  const snapshot = await get(child(ref(db), "users"));
+  if (!snapshot.exists()) {
+    return 1;
+  }
+
+  const users = snapshot.val();
+  const keys = Object.keys(users);
+
+  const validIds = keys.map((id) => parseInt(id)).filter((id) => !isNaN(id));
+  return validIds.length > 0 ? Math.max(...validIds) + 1 : 1;
+};
+
+const checkIfEmailExisting = async (email) => {
+  try {
+    const snapshot = await get(child(ref(db), "users"));
+    if (!snapshot.exists()) {
+      return;
+    }
+
+    const users = snapshot.val(); // Get all users from the snapshot
+    return Object.values(users).some((user) => user.email === email); // Check if any user has the same email
+  } catch (error) {
+    console.error("Error checking email: ", error);
+    Alert.alert("Error", "Failed to check email");
+  }
+};
 
 const RegisterScreen = () => {
-  const [id, setId] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const addDataToRealtimeDatabase = async () => {
-    const nextId = await getIdCount(); // Get the next available ID
+    const id = await getNextId(); // Get the next available ID
     const emailExists = await checkIfEmailExisting(email.toLowerCase()); // Check if email already exists
+
     if (emailExists) {
       Alert.alert(
         "Error",
@@ -21,9 +48,8 @@ const RegisterScreen = () => {
       );
       return;
     }
-    let id = nextId.toString(); // Convert nextId to string for the database key
+
     if (
-      !id.trim() ||
       !firstName.trim() ||
       !lastName.trim() ||
       !email.trim() ||
@@ -32,9 +58,10 @@ const RegisterScreen = () => {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
+
     try {
-      await set(ref(db, "users/" + id), {
-        id: nextId,
+      await set(ref(db, `users/${id}`), {
+        id: id,
         firstName: firstName,
         lastName: lastName,
         email: email.toLowerCase(),
@@ -42,7 +69,6 @@ const RegisterScreen = () => {
         createdAt: new Date().toISOString(),
       });
       Alert.alert("Success", "Data added successfully!");
-      setId("");
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -53,6 +79,7 @@ const RegisterScreen = () => {
     }
   };
 
+<<<<<<< HEAD
   const checkIfExisting = async (id) => {
     if (!id) return false;
     const snapshot = await get(child(ref(db), `users/${id}`));
@@ -102,6 +129,8 @@ const RegisterScreen = () => {
     }
   };
 
+=======
+>>>>>>> origin/register-screen-alternative
   return (
     <View style={styles.container}>
       <Text style={styles.head_text}>FlavorFind User Registration</Text>/
