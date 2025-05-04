@@ -4,6 +4,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const Tab = createBottomTabNavigator();
+const routeIcons = {
+  Home: "home",
+  "My Recipes": "restaurant",
+  Create: "add",
+  Profile: "person",
+};
 
 const App = () => {
   return (
@@ -12,23 +18,8 @@ const App = () => {
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarLabelStyle: { textTransform: "uppercase" },
-          tabBarIcon: ({ size }) => {
-            let iconName;
-
-            switch (route.name) {
-              case "My Recipes":
-                iconName = "restaurant";
-                break;
-              case "Create":
-                iconName = "add";
-                break;
-              case "Profile":
-                iconName = "person";
-                break;
-              default:
-                iconName = "home";
-            }
-
+          tabBarIcon: ({ focused, size }) => {
+            const iconName = focused ? routeIcons[route.name] : `${routeIcons[route.name]}-outline`;
             return <Ionicons name={iconName} size={size} color="black" />;
           },
         })}
