@@ -1,10 +1,17 @@
-import { StyleSheet, View, Text, TextInput, FlatList } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  Pressable,
+} from "react-native";
 import { useState, useEffect, useMemo } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RecipePost from "../components/RecipePost";
 import { spacing, fonts, colors } from "../styles";
-import { onValue } from "firebase/database";
+import { get, onValue } from "firebase/database";
 import { ref, db } from "../firebaseConfig";
 
 const containsKeyword = (title, keyword) => {
@@ -23,6 +30,8 @@ const isSearchableBy = (title, keywords) => {
 
 const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedRecipeId, setSelectedRecipeId] = useState(null);
+
   const [posts, setPosts] = useState([]);
   const visiblePosts = useMemo(() => {
     return posts.filter(({ title }) => isSearchableBy(title, searchQuery));
@@ -49,12 +58,19 @@ const HomeScreen = () => {
         />
         <FontAwesome name="search" size={24} color="black" />
       </View>
-      <RecipeFeed data={visiblePosts} />
+      {selectedRecipeId === null ? (
+        <RecipeFeed data={visiblePosts} onPress={setSelectedRecipeId} />
+      ) : (
+        <RecipeView
+          id={selectedRecipeId}
+          onClose={() => setSelectedRecipeId(null)}
+        />
+      )}
     </View>
   );
 };
 
-const RecipeFeed = ({ data }) => {
+const RecipeFeed = ({ data, onPress }) => {
   return (
     <FlatList
       showsVerticalScrollIndicator={false}
@@ -66,10 +82,42 @@ const RecipeFeed = ({ data }) => {
             username={item.username}
             title={item.title}
             uri={item.uri}
+            onPress={() => onPress(item.id)}
           />
         </View>
       )}
     />
+  );
+};
+
+const RecipeView = ({ id, onClose }) => {
+  const [recipe, setRecipe] = useState({});
+
+  useEffect(() => {
+    const loadRecipe = async (id) => {
+      const recipeRef = ref(db, `posts/${id}`);
+      const recipe = await get(recipeRef);
+      setRecipe(recipe.val());
+    };
+
+    loadRecipe(id);
+  }, [id]);
+
+  return (
+    <View style={styles.recipeContainer}>
+      <View style={styles.recipeHeader}>
+        <Pressable onPress={onClose} style={styles.recipeBackButton}>
+          {({ pressed }) => {
+            const iconName = `arrow-back-circle${pressed ? "" : "-outline"}`;
+            return <Ionicons name={iconName} size={30} color="black" />;
+          }}
+        </Pressable>
+        <View>
+          <Text style={styles.recipeUserText}>@{recipe.username}</Text>
+          <Text style={styles.recipeTitleText}>{recipe.title}</Text>
+        </View>
+      </View>
+    </View>
   );
 };
 
@@ -99,6 +147,33 @@ const styles = StyleSheet.create({
   },
   recipePost: {
     margin: spacing.sm,
+  },
+  recipeContainer: {
+    flex: 1,
+  },
+  recipeHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "stretch",
+    marginTop: spacing.xs,
+    marginHorizontal: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    backgroundColor: colors.primary,
+    borderRadius: 20,
+  },
+  recipeUserText: {
+    fontFamily: fonts.primary,
+    fontSize: fonts.sm,
+    fontWeight: "bold",
+  },
+  recipeTitleText: {
+    fontFamily: fonts.primary,
+    fontSize: fonts.md,
+    fontWeight: "bold",
+  },
+  recipeBackButton: {
+    marginRight: spacing.sm,
   },
 });
 

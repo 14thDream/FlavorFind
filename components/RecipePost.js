@@ -1,12 +1,12 @@
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { BasicButton } from "./Buttons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import { colors, fonts, spacing } from "../styles";
 
-const RecipePost = ({ username, title, uri }) => {
+const RecipePost = ({ username, title, uri, onPress }) => {
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={onPress}>
       <Text style={[styles.text, styles.usernameText]}>@{username}</Text>
       <Text style={[styles.text, styles.titleText]}>{title}</Text>
       <Image style={styles.image} source={{ uri: uri }} />
@@ -18,7 +18,7 @@ const RecipePost = ({ username, title, uri }) => {
           <FontAwesome name="comment-o" size={18} color="black" />
         </BasicButton>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
