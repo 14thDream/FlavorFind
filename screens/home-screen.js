@@ -123,7 +123,7 @@ const RecipeView = ({ id, onClose }) => {
           <Text style={styles.recipeTitleText}>{recipe.title}</Text>
         </View>
       </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.recipeCard}>
           <Image style={styles.recipeImage} source={{ uri: recipe.uri }} />
           <View style={styles.recipeButtons}>
