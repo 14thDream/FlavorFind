@@ -97,6 +97,7 @@ const RecipeView = ({ id, onClose }) => {
   const [recipe, setRecipe] = useState({});
   const ingredients =
     recipe && recipe.ingredients ? Object.values(recipe.ingredients) : [];
+  const steps = recipe && recipe.steps ? Object.values(recipe.steps) : [];
 
   useEffect(() => {
     const loadRecipe = async (id) => {
@@ -133,10 +134,20 @@ const RecipeView = ({ id, onClose }) => {
           <View style={styles.recipeSectionHeader}>
             <Text style={styles.recipeSectionText}>Ingredients</Text>
           </View>
-          <View style={styles.recipeIngredients}>
+          <View style={styles.recipeList}>
             {ingredients.map((item, index) => (
               <Text key={index} style={styles.recipeListText}>
                 • {item.name} : {item.amount}
+              </Text>
+            ))}
+          </View>
+          <View style={styles.recipeSectionHeader}>
+            <Text style={styles.recipeSectionText}>Steps</Text>
+          </View>
+          <View style={styles.recipeList}>
+            {steps.map((item, index) => (
+              <Text key={index} style={styles.recipeListText}>
+                {index}. {item}
               </Text>
             ))}
           </View>
@@ -204,6 +215,7 @@ const styles = StyleSheet.create({
   recipeCard: {
     alignSelf: "stretch",
     marginHorizontal: spacing.sm,
+    marginVertical: spacing.sm,
     backgroundColor: colors.primary,
     borderRadius: 10,
   },
@@ -228,7 +240,7 @@ const styles = StyleSheet.create({
   },
   recipeSectionHeader: {
     marginTop: spacing.sm + spacing.xs,
-    marginBottom: spacing.xs,
+    marginBottom: spacing.sm,
     marginHorizontal: spacing.sm,
     paddingHorizontal: spacing.sm,
     backgroundColor: colors.highlight,
@@ -240,7 +252,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
   },
-  recipeIngredients: {
+  recipeList: {
     marginHorizontal: spacing.sm,
     marginBottom: spacing.sm,
     paddingHorizontal: spacing.xs,
