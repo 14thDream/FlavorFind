@@ -20,7 +20,6 @@ export const CommentButton = ({ size, color }) => {
 const styles = StyleSheet.create({
   basic: {
     width: 53,
-    height: 21,
     borderRadius: 20,
     backgroundColor: "white",
     justifyContent: "center",
