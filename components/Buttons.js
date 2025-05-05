@@ -1,9 +1,9 @@
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export const LikeButton = ({ size, color }) => {
   return (
-    <View style={styles.basic}>
+    <View>
       <FontAwesome name="heart-o" size={size} color={color} />
     </View>
   );
@@ -11,18 +11,8 @@ export const LikeButton = ({ size, color }) => {
 
 export const CommentButton = ({ size, color }) => {
   return (
-    <View style={styles.basic}>
+    <View>
       <FontAwesome name="comment-o" size={size} color={color} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  basic: {
-    width: 53,
-    borderRadius: 20,
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
