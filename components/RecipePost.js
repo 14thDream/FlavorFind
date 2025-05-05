@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   bar: {
     flexDirection: "row",
-    marginHorizontal: spacing.sm,
+    marginHorizontal: spacing.sm + spacing.xs,
     paddingVertical: spacing.xs,
     gap: spacing.md + spacing.sm,
   },
