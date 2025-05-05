@@ -2,6 +2,7 @@ import { StyleSheet, Platform, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import HomeScreen from "./screens/home-screen";
 import LoginScreen from "./screens/login-screen";
@@ -20,7 +21,7 @@ const routeIcons = {
 
 const App = () => {
   return (
-    <NavigationContainer style={styles.container}>
+    <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
@@ -32,23 +33,25 @@ const App = () => {
 
 const Main = () => {
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarLabelStyle: { textTransform: "uppercase" },
-        tabBarIcon: ({ focused, size }) => {
-          const iconName = focused
-            ? routeIcons[route.name]
-            : `${routeIcons[route.name]}-outline`;
-          return <Ionicons name={iconName} size={size} color="black" />;
-        },
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="My Recipes" component={HomeScreen} />
-      <Tab.Screen name="Create" component={HomeScreen} />
-      <Tab.Screen name="Profile" component={HomeScreen} />
-    </Tab.Navigator>
+    <SafeAreaView style={styles.container}>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarLabelStyle: { textTransform: "uppercase" },
+          tabBarIcon: ({ focused, size }) => {
+            const iconName = focused
+              ? routeIcons[route.name]
+              : `${routeIcons[route.name]}-outline`;
+            return <Ionicons name={iconName} size={size} color="black" />;
+          },
+        })}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="My Recipes" component={HomeScreen} />
+        <Tab.Screen name="Create" component={HomeScreen} />
+        <Tab.Screen name="Profile" component={HomeScreen} />
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 };
 
