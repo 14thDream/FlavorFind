@@ -2,6 +2,7 @@ export const colors = {
   primary: "#FFFFFF",
   background: "#FFD95F",
   link: "#0051FF",
+  highlight: "#D9D9D9",
 };
 
 export const spacing = {

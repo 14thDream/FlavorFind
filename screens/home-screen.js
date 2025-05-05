@@ -128,6 +128,9 @@ const RecipeView = ({ id, onClose }) => {
             <CommentButton size={28} color="black" />
           </View>
           <Text style={styles.recipeDescriptionText}>{recipe.description}</Text>
+          <View style={styles.recipeSectionHeader}>
+            <Text style={styles.recipeSectionText}>Ingredients</Text>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -213,6 +216,20 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary,
     fontSize: 12,
     fontWeight: "bold",
+  },
+  recipeSectionHeader: {
+    marginTop: spacing.sm + spacing.xs,
+    marginBottom: spacing.sm,
+    marginHorizontal: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    backgroundColor: colors.highlight,
+    borderRadius: 10,
+  },
+  recipeSectionText: {
+    fontFamily: fonts.primary,
+    fontSize: 18,
+    fontWeight: "bold",
+    textTransform: "uppercase",
   },
 });
 
