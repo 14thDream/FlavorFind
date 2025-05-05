@@ -95,6 +95,8 @@ const RecipeFeed = ({ data, onPress }) => {
 
 const RecipeView = ({ id, onClose }) => {
   const [recipe, setRecipe] = useState({});
+  const ingredients =
+    recipe && recipe.ingredients ? Object.values(recipe.ingredients) : [];
 
   useEffect(() => {
     const loadRecipe = async (id) => {
@@ -130,6 +132,13 @@ const RecipeView = ({ id, onClose }) => {
           <Text style={styles.recipeDescriptionText}>{recipe.description}</Text>
           <View style={styles.recipeSectionHeader}>
             <Text style={styles.recipeSectionText}>Ingredients</Text>
+          </View>
+          <View style={styles.recipeIngredients}>
+            {ingredients.map((item, index) => (
+              <Text key={index} style={styles.recipeListText}>
+                • {item.name} : {item.amount}
+              </Text>
+            ))}
           </View>
         </View>
       </ScrollView>
@@ -219,7 +228,7 @@ const styles = StyleSheet.create({
   },
   recipeSectionHeader: {
     marginTop: spacing.sm + spacing.xs,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
     marginHorizontal: spacing.sm,
     paddingHorizontal: spacing.sm,
     backgroundColor: colors.highlight,
@@ -230,6 +239,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textTransform: "uppercase",
+  },
+  recipeIngredients: {
+    marginHorizontal: spacing.sm,
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.xs,
+    gap: spacing.xs,
+  },
+  recipeListText: {
+    fontFamily: fonts.primary,
+    fontSize: fonts.md,
+    fontWeight: "bold",
   },
 });
 
