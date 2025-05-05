@@ -232,10 +232,10 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm + spacing.xs,
   },
   recipeDescriptionText: {
-    marginHorizontal: spacing.sm,
+    marginHorizontal: spacing.sm + spacing.xs,
     marginVertical: spacing.sm,
     fontFamily: fonts.primary,
-    fontSize: 12,
+    fontSize: fonts.md,
     fontWeight: "bold",
   },
   recipeSectionHeader: {
