@@ -5,6 +5,8 @@ import {
   TextInput,
   FlatList,
   Pressable,
+  ScrollView,
+  Image,
 } from "react-native";
 import { useState, useEffect, useMemo } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -13,6 +15,7 @@ import RecipePost from "../components/RecipePost";
 import { spacing, fonts, colors } from "../styles";
 import { get, onValue } from "firebase/database";
 import { ref, db } from "../firebaseConfig";
+import { CommentButton, LikeButton } from "../components/Buttons";
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -117,6 +120,15 @@ const RecipeView = ({ id, onClose }) => {
           <Text style={styles.recipeTitleText}>{recipe.title}</Text>
         </View>
       </View>
+      <ScrollView>
+        <View style={styles.recipeCard}>
+          <Image style={styles.recipeImage} source={{ uri: recipe.uri }} />
+          <View style={styles.recipeButtons}>
+            <LikeButton size={28} color="black" />
+            <CommentButton size={28} color="black" />
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -156,6 +168,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "stretch",
     marginTop: spacing.xs,
+    marginBottom: spacing.sm,
     marginHorizontal: spacing.sm,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
@@ -174,6 +187,24 @@ const styles = StyleSheet.create({
   },
   recipeBackButton: {
     marginRight: spacing.sm,
+  },
+  recipeCard: {
+    alignSelf: "stretch",
+    marginHorizontal: spacing.sm,
+    backgroundColor: colors.primary,
+    borderRadius: 10,
+  },
+  recipeImage: {
+    height: 269,
+    alignSelf: "stretch",
+    borderRadius: 10,
+    marginHorizontal: spacing.sm,
+    marginTop: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  recipeButtons: {
+    flexDirection: "row",
+    marginBottom: spacing.md,
   },
 });
 
