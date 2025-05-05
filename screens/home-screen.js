@@ -147,7 +147,7 @@ const RecipeView = ({ id, onClose }) => {
           <View style={styles.recipeList}>
             {steps.map((item, index) => (
               <Text key={index} style={styles.recipeListText}>
-                {index}. {item}
+                {index + 1}. {item}
               </Text>
             ))}
           </View>
