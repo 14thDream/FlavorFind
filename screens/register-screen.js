@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   },
   input: {
     alignSelf: "stretch",
-    height: 40,
+    minHeight: 40,
     paddingHorizontal: spacing.sm,
     borderWidth: 1,
     borderRadius: 10,

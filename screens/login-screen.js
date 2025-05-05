@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.body,
   },
   loginButton: {
-    height: 40,
+    minHeight: 40,
     alignSelf: "stretch",
     marginHorizontal: spacing.lg,
     marginTop: spacing.lg + spacing.md,
