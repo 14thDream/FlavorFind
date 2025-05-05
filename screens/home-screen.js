@@ -1,13 +1,11 @@
 import { StyleSheet, View, Text, TextInput, FlatList } from "react-native";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
-
 import RecipePost from "../components/RecipePost";
-
 import { spacing, fonts, colors } from "../styles";
-import DATA from "../tests/mock";
+import { onValue } from "firebase/database";
+import { ref, db } from "../firebaseConfig";
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -24,10 +22,18 @@ const isSearchableBy = (title, keywords) => {
 };
 
 const HomeScreen = () => {
-  const [posts, setPosts] = useState(DATA);
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const listener = onValue(ref(db, "posts"), snapshot => {
+      const posts = Object.values(snapshot.val());
+      setPosts(posts);
+    });
+
+    return () => listener();
+  }, []);
 
   const handleChangeSearchText = (keywords) => {
-    setPosts(DATA.filter(({ title }) => isSearchableBy(title, keywords)));
+    setPosts(posts.filter(({ title }) => isSearchableBy(title, keywords)));
   };
 
   return (
