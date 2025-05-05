@@ -49,21 +49,27 @@ const HomeScreen = () => {
         />
         <FontAwesome name="search" size={24} color="black" />
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={visiblePosts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.recipePost}>
-            <RecipePost
-              username={item.username}
-              title={item.title}
-              uri={item.uri}
-            />
-          </View>
-        )}
-      />
+      <RecipeFeed data={visiblePosts} />
     </View>
+  );
+};
+
+const RecipeFeed = ({ data }) => {
+  return (
+    <FlatList
+      showsVerticalScrollIndicator={false}
+      data={data}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <View style={styles.recipePost}>
+          <RecipePost
+            username={item.username}
+            title={item.title}
+            uri={item.uri}
+          />
+        </View>
+      )}
+    />
   );
 };
 
