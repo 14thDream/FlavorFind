@@ -127,6 +127,7 @@ const RecipeView = ({ id, onClose }) => {
             <LikeButton size={28} color="black" />
             <CommentButton size={28} color="black" />
           </View>
+          <Text style={styles.recipeDescriptionText}>{recipe.description}</Text>
         </View>
       </ScrollView>
     </View>
@@ -204,7 +205,14 @@ const styles = StyleSheet.create({
   },
   recipeButtons: {
     flexDirection: "row",
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm + spacing.xs,
+  },
+  recipeDescriptionText: {
+    marginHorizontal: spacing.sm,
+    marginVertical: spacing.sm,
+    fontFamily: fonts.primary,
+    fontSize: 12,
+    fontWeight: "bold",
   },
 });
 
