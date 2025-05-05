@@ -10,8 +10,8 @@ const RecipePost = ({ username, title, uri, onPress }) => {
       <Text style={[styles.text, styles.titleText]}>{title}</Text>
       <Image style={styles.image} source={{ uri: uri }} />
       <View style={styles.bar}>
-        <LikeButton size={18} color="black" />
-        <CommentButton size={18} color="black" />
+        <LikeButton size={24} color="black" />
+        <CommentButton size={24} color="black" />
       </View>
     </Pressable>
   );
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    columnGap: spacing.sm,
+    gap: spacing.md + spacing.sm,
   },
 });
 

@@ -229,7 +229,9 @@ const styles = StyleSheet.create({
   },
   recipeButtons: {
     flexDirection: "row",
+    marginHorizontal: spacing.sm + spacing.xs,
     marginBottom: spacing.sm + spacing.xs,
+    gap: spacing.md + spacing.sm,
   },
   recipeDescriptionText: {
     marginHorizontal: spacing.sm + spacing.xs,
