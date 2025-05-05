@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, TextInput, FlatList } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RecipePost from "../components/RecipePost";
@@ -22,19 +22,20 @@ const isSearchableBy = (title, keywords) => {
 };
 
 const HomeScreen = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [posts, setPosts] = useState([]);
+  const visiblePosts = useMemo(() => {
+    return posts.filter(({ title }) => isSearchableBy(title, searchQuery));
+  }, [posts, searchQuery]);
+
   useEffect(() => {
-    const listener = onValue(ref(db, "posts"), snapshot => {
+    const listener = onValue(ref(db, "posts"), (snapshot) => {
       const posts = Object.values(snapshot.val());
       setPosts(posts);
     });
 
     return () => listener();
   }, []);
-
-  const handleChangeSearchText = (keywords) => {
-    setPosts(posts.filter(({ title }) => isSearchableBy(title, keywords)));
-  };
 
   return (
     <View style={styles.container}>
@@ -44,13 +45,14 @@ const HomeScreen = () => {
         <TextInput
           style={styles.headerSearchBar}
           placeholder="Search Recipe"
-          onChangeText={handleChangeSearchText}
+          onChangeText={setSearchQuery}
         />
         <FontAwesome name="search" size={24} color="black" />
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={posts}
+        data={visiblePosts}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.recipePost}>
             <RecipePost
