@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
   },
   input: {
     alignSelf: "stretch",
-    height: 40,
     paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
     borderWidth: 1,
     borderRadius: 10,
     fontSize: 20,
