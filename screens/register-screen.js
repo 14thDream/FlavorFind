@@ -54,8 +54,7 @@ const checkIfEmailExisting = async (email) => {
 SplashScreen.preventAutoHideAsync();
 
 const RegisterScreen = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -89,12 +88,7 @@ const RegisterScreen = () => {
       return;
     }
 
-    if (
-      !firstName.trim() ||
-      !lastName.trim() ||
-      !email.trim() ||
-      !password.trim()
-    ) {
+    if (!username.trim() || !email.trim() || !password.trim()) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
@@ -107,15 +101,13 @@ const RegisterScreen = () => {
     try {
       await set(ref(db, `users/${id}`), {
         id: id,
-        firstName: firstName,
-        lastName: lastName,
+        username: username,
         email: email.toLowerCase(),
         password: password,
         createdAt: new Date().toISOString(),
       });
       Alert.alert("Success", "User added successfully!");
-      setFirstName("");
-      setLastName("");
+      setUsername("");
       setEmail("");
       setPassword("");
       navigator.goBack();
@@ -146,13 +138,8 @@ const RegisterScreen = () => {
           <Text style={styles.signUpText}>Sign Up</Text>
           <View style={styles.inputGroup}>
             <TextInput
-              placeholder="first name"
-              onChangeText={setFirstName}
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="last name"
-              onChangeText={setLastName}
+              placeholder="username"
+              onChangeText={setUsername}
               style={styles.input}
             />
             <TextInput
