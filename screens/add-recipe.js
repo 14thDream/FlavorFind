@@ -6,16 +6,13 @@ import { getDatabase, ref, set, push } from 'firebase/database'; // Firebase imp
 
 const RegisterScreen = () => {
   const [id, setId] = useState("");
-  const [image, setImage] = useState("");
+  const [uri, setUri] = useState("");  // Changed 'image' to 'uri'
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
-  const [ingredients, setIngredients] = useState([{ name: '', amount: '', unit: '' }]); // Store ingredients as an array with name, amount, and unit
+  const [ingredients, setIngredients] = useState([{ name: '', amount: '',}]); // Store ingredients as an array with name, amount
   const [steps, setSteps] = useState(['']);
   const [title, setTitle] = useState("");
   const db = getDatabase(); // Firebase database reference
-
-
-
 
   // Function to handle image selection
   const pickImage = async () => {
@@ -33,20 +30,20 @@ const RegisterScreen = () => {
     });
 
     if (result.assets && result.assets.length > 0) {
-      setImage(result.assets[0].uri);
+      setUri(result.assets[0].uri);  // Changed 'setImage' to 'setUri'
     }
   };
 
   // Function to upload image to Cloudinary and return the URL
   const uploadImage = async () => {
-    if (!image) {
+    if (!uri) {  // Changed 'image' to 'uri'
       alert('Please select an image first');
       return;
     }
 
     const data = new FormData();
     data.append('file', {
-      uri: image,
+      uri: uri,  // Changed 'image' to 'uri'
       type: 'image/jpeg',
       name: 'upload.jpg',
     });
@@ -62,8 +59,8 @@ const RegisterScreen = () => {
 
       if (result.secure_url) {
         Alert.alert("Upload Successful!");
-        setImage(result.secure_url); // Update image URI with the URL returned from Cloudinary
-        return result.secure_url; // Return the Cloudinary URL for later use
+        setUri(result.secure_url);  // Changed 'setImage' to 'setUri'
+        return result.secure_url;  // Return the Cloudinary URL for later use
       } else {
         throw new Error('No secure URL in response');
       }
@@ -76,7 +73,7 @@ const RegisterScreen = () => {
 
   // Function to handle adding a new ingredient
   const addIngredient = () => {
-    setIngredients([...ingredients, { name: '', amount: '', unit: '' }]);
+    setIngredients([...ingredients, { name: '', amount: '',}]);
   };
 
   // Function to handle input change for ingredients
@@ -97,8 +94,6 @@ const RegisterScreen = () => {
     setSteps([...steps, '']);
   };
 
-
-  
   const getIdCount = async () => {
     try {
       const snapshot = await get(child(ref(db), "posts"));
@@ -127,12 +122,10 @@ const RegisterScreen = () => {
     return false;
   };
 
-
   // Function to handle submitting the recipe
- // Function to handle submitting the recipe
- const submitRecipe = async () => {
+  const submitRecipe = async () => {
     console.log("Submit Recipe function started.");
-  
+
     // Get the next available ID
     const nextId = await getIdCount();
     console.log("Next ID:", nextId); // Log the ID fetched
@@ -143,16 +136,16 @@ const RegisterScreen = () => {
     }
 
     // Check if any required fields are empty
-    if (!title.trim() || !description.trim() || steps.some(step => !step.trim()) || !image || ingredients.some(ingredient => !ingredient.name || !ingredient.amount || !ingredient.unit)) {
+    if (!title.trim() || !description.trim() || steps.some(step => !step.trim()) || !uri || ingredients.some(ingredient => !ingredient.name || !ingredient.amount)) {  // Changed 'image' to 'uri'
       console.log("Validation failed! Fields missing:");
 
       if (!title.trim()) console.log("Title is empty.");
       if (!description.trim()) console.log("Description is empty.");
       if (steps.some(step => !step.trim())) console.log("Steps are empty.");
-      if (!image) console.log("Image is missing.");
+      if (!uri) console.log("Image is missing.");  // Changed 'image' to 'uri'
 
       ingredients.forEach((ingredient, index) => {
-        if (!ingredient.name || !ingredient.amount || !ingredient.unit) {
+        if (!ingredient.name || !ingredient.amount) {
           console.log(`Ingredient at index ${index} is incomplete:`, ingredient);
         }
       });
@@ -169,14 +162,14 @@ const RegisterScreen = () => {
       if (imageUrl) {
         console.log("Image URL from Cloudinary:", imageUrl);
 
-        // Prepare the recipe object with all fields, including the image URL
+        // Prepare the recipe object with all fields, including the image URI
         const recipe = {
           id: nextId.toString(), // Convert nextId to string for the database key
           title,
           description,
           ingredients,
           steps,
-          image: imageUrl, // Include the image URL from Cloudinary
+          uri: imageUrl,  // Changed 'image' to 'uri'
         };
 
         console.log("Recipe Data to Firebase:", recipe); // Log the recipe data before adding to Firebase
@@ -189,9 +182,9 @@ const RegisterScreen = () => {
         // Reset input fields
         setTitle('');
         setDescription('');
-        setIngredients([{ name: '', amount: '', unit: '' }]);
+        setIngredients([{ name: '', amount: '',}]);
         setSteps(['']);
-        setImage('');
+        setUri('');  // Changed 'setImage' to 'setUri'
       } else {
         console.log("No image URL received from Cloudinary.");
         Alert.alert("Error", "Failed to upload image");
@@ -202,10 +195,6 @@ const RegisterScreen = () => {
     }
   };
 
-
-  
-  
-  
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -242,12 +231,7 @@ const RegisterScreen = () => {
               value={ingredient.amount}
               onChangeText={(value) => handleIngredientChange(index, 'amount', value)}
             />
-            <TextInput
-              style={styles.ingredientInput}
-              placeholder="Unit"
-              value={ingredient.unit}
-              onChangeText={(value) => handleIngredientChange(index, 'unit', value)}
-            />
+  
           </View>
         ))}
         <TouchableOpacity onPress={addIngredient} style={styles.addIngredientButton}>
@@ -255,27 +239,26 @@ const RegisterScreen = () => {
         </TouchableOpacity>
 
         <Text style={styles.label}>Steps</Text>
-{steps.map((step, index) => (
-  <TextInput
-    key={index}
-    style={styles.input}
-    placeholder={`Step ${index + 1}`}
-    value={step}
-    onChangeText={(value) => handleStepChange(index, value)}
-  />
-))}
-<TouchableOpacity onPress={addStep} style={styles.addIngredientButton}>
-  <Text style={styles.addIngredientButtonText}>Add Step</Text>
-</TouchableOpacity>
-
+        {steps.map((step, index) => (
+          <TextInput
+            key={index}
+            style={styles.input}
+            placeholder={`Step ${index + 1}`}
+            value={step}
+            onChangeText={(value) => handleStepChange(index, value)}
+          />
+        ))}
+        <TouchableOpacity onPress={addStep} style={styles.addIngredientButton}>
+          <Text style={styles.addIngredientButtonText}>Add Step</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity style={styles.signIn} onPress={pickImage}>
           <Text style={styles.signInText}>Select Recipe Image From Gallery</Text>
         </TouchableOpacity>
 
-        {image && (
+        {uri && (
           <TouchableOpacity onPress={pickImage}>
-            <Image source={{ uri: image }} style={styles.imagePreview} />
+            <Image source={{ uri: uri }} style={styles.imagePreview} />
           </TouchableOpacity>
         )}
 
