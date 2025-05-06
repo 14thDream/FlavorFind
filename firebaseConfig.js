@@ -1,6 +1,7 @@
 // firebaseConfig.js
 import { initializeApp } from "firebase/app";
 import {
+  get,
   getDatabase,
   ref,
   set,
@@ -25,4 +26,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-export { db, ref, set, push, serverTimestamp };
+const getNextId = async (table) => {
+  const dbRef = ref(db, table);
+  const snapshot = await get(dbRef);
+  if (!snapshot.exists()) {
+    return 1;
+  }
+
+  const users = snapshot.val();
+  const keys = Object.keys(users);
+
+  const validIds = keys.map((id) => parseInt(id)).filter((id) => !isNaN(id));
+  return validIds.length > 0 ? Math.max(...validIds) + 1 : 1;
+};
+
+export { db, ref, set, push, serverTimestamp, getNextId };

@@ -10,7 +10,7 @@ import {
   Pressable,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { db, ref, set } from "../firebaseConfig";
+import { db, getNextId, ref, set } from "../firebaseConfig";
 import { get, child } from "firebase/database";
 import { colors, spacing, fonts } from "../styles";
 
@@ -22,19 +22,6 @@ import { Oswald_400Regular } from "@expo-google-fonts/oswald";
 import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useNavigation } from "@react-navigation/native";
-
-const getNextId = async () => {
-  const snapshot = await get(child(ref(db), "users"));
-  if (!snapshot.exists()) {
-    return 1;
-  }
-
-  const users = snapshot.val();
-  const keys = Object.keys(users);
-
-  const validIds = keys.map((id) => parseInt(id)).filter((id) => !isNaN(id));
-  return validIds.length > 0 ? Math.max(...validIds) + 1 : 1;
-};
 
 const checkIfEmailExisting = async (email) => {
   try {
@@ -77,7 +64,7 @@ const RegisterScreen = () => {
   }
 
   const addDataToRealtimeDatabase = async () => {
-    const id = await getNextId(); // Get the next available ID
+    const id = await getNextId("users"); // Get the next available ID
     const emailExists = await checkIfEmailExisting(email.toLowerCase()); // Check if email already exists
 
     if (emailExists) {
