@@ -8,14 +8,15 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RecipePost from "../components/RecipePost";
 import { spacing, fonts, colors } from "../styles";
-import { get, onValue } from "firebase/database";
-import { ref, db } from "../firebaseConfig";
+import { get, onValue, set } from "firebase/database";
+import { ref, db, getNextId } from "../firebaseConfig";
 import { CommentButton, LikeButton } from "../components/Buttons";
+import { UserContext } from "../Contexts";
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -114,6 +115,26 @@ const RecipeView = ({ id, onClose }) => {
     loadRecipe(id);
   }, [id]);
 
+  const [userId, setUserId] = useContext(UserContext);
+  const [comment, setComment] = useState("");
+
+  const sendComment = async (comment) => {
+    const commentPath = `posts/${recipe.id}/comments`;
+    const id = await getNextId(commentPath);
+    const commentRef = ref(db, `${commentPath}/${id}`);
+
+    if (!comment.trim()) {
+      return;
+    }
+
+    set(commentRef, {
+      id: id,
+      userId: userId,
+      message: comment,
+    });
+    setComment("");
+  };
+
   return (
     <View style={styles.recipeContainer}>
       <View style={styles.recipeHeader}>
@@ -162,10 +183,14 @@ const RecipeView = ({ id, onClose }) => {
             <TextInput
               multiline
               numberOfLines={1}
+              value={comment}
+              onChangeText={setComment}
               placeholder="Add comment"
               style={styles.commentInputText}
             />
-            <Ionicons name="caret-forward" size={28} color="black" />
+            <Pressable onPress={() => sendComment(comment)}>
+              <Ionicons name="caret-forward" size={28} color="black" />
+            </Pressable>
           </View>
         </View>
       </ScrollView>
