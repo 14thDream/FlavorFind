@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
+import { TextInput, Button, Alert, StyleSheet } from "react-native";
+import { db, ref, set } from "../firebaseConfig";
+import { get, child } from "firebase/database";
+
+
 
 const TestFile = () => {
 
