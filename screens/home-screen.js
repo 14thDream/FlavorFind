@@ -152,6 +152,15 @@ const RecipeView = ({ id, onClose }) => {
             ))}
           </View>
         </View>
+        <View style={styles.commentInput}>
+          <TextInput
+            multiline
+            numberOfLines={1}
+            placeholder="Add comment"
+            style={styles.commentInputText}
+          />
+          <Ionicons name="caret-forward" size={28} color="black" />
+        </View>
       </ScrollView>
     </View>
   );
@@ -264,6 +273,20 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary,
     fontSize: fonts.md,
     fontWeight: "bold",
+  },
+  commentInput: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "stretch",
+    margin: spacing.sm,
+    backgroundColor: colors.primary,
+    borderRadius: 20,
+  },
+  commentInputText: {
+    flex: 1,
+    fontFamily: fonts.primary,
+    fontSize: fonts.md,
+    paddingHorizontal: spacing.sm,
   },
 });
 
