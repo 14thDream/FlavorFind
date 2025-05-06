@@ -279,6 +279,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "stretch",
     margin: spacing.sm,
+    paddingHorizontal: spacing.sm,
     backgroundColor: colors.primary,
     borderRadius: 20,
   },
@@ -286,7 +287,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: fonts.primary,
     fontSize: fonts.md,
-    paddingHorizontal: spacing.sm,
   },
 });
 
