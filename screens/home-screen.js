@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "stretch",
     margin: spacing.sm,
-    paddingHorizontal: spacing.sm,
+    paddingLeft: spacing.sm,
     backgroundColor: colors.primary,
     borderRadius: 20,
   },
