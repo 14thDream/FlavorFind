@@ -152,14 +152,16 @@ const RecipeView = ({ id, onClose }) => {
             ))}
           </View>
         </View>
-        <View style={styles.commentInput}>
-          <TextInput
-            multiline
-            numberOfLines={1}
-            placeholder="Add comment"
-            style={styles.commentInputText}
-          />
-          <Ionicons name="caret-forward" size={28} color="black" />
+        <View style={styles.recipeCard}>
+          <View style={styles.commentInput}>
+            <TextInput
+              multiline
+              numberOfLines={1}
+              placeholder="Add comment"
+              style={styles.commentInputText}
+            />
+            <Ionicons name="caret-forward" size={28} color="black" />
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -280,7 +282,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     margin: spacing.sm,
     paddingLeft: spacing.sm,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.highlight,
     borderRadius: 20,
   },
   commentInputText: {
