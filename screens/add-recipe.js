@@ -1,11 +1,40 @@
 import React, { useState } from 'react';
-import { View, Button, Image, Text } from 'react-native';
+import { View, Text, TextInput, Button, Alert, StyleSheet, Image } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
+
+
 import { Platform } from 'react-native';
+
+
+
+import { db, ref, set } from "../firebaseConfig";
+import { get, child } from "firebase/database";
+import { getId } from "firebase/installations";
+
+
+
+
+
+
+
 
 export default function App() {
   const [image, setImage] = useState(null);
   const [status, setStatus] = useState(null);
+
+  const [id, setId] = useState("");
+  const [description, setDescription] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+
+
+
+
+
+
+
 
   // Function to handle image picking
   const pickImage = async () => {
@@ -25,18 +54,20 @@ export default function App() {
     if (result.assets && result.assets.length > 0) {
       setImage(result.assets[0].uri);
     }
-   
-
   };
   
 
   // Function to upload the image (example with a dummy API)
   const uploadImage = async () => {
+    debug_function();
+    
     if (!image) {
-      alert('Please select an image first');
+      alert('Please select an image first'); 
       return;
     }
-  
+
+
+
     const data = new FormData();
     data.append('file', {
       uri: image,
@@ -46,16 +77,20 @@ export default function App() {
     data.append('upload_preset', 'Flavorfind'); // Your preset name
     data.append('cloud_name', 'djrpuf5yu');     // Your Cloudinary cloud name
   
+
+
     try {
       const res = await fetch('https://api.cloudinary.com/v1_1/djrpuf5yu/image/upload', {
         method: 'POST',
         body: data,
       });
-  
       const result = await res.json();
       console.log("Uploaded link: "+result.secure_url);
       console.log('Uploaded image URL:', result.secure_url);
       setStatus('Upload Successful!');
+
+
+
     } catch (err) {
       console.error('Upload failed:', err);
       setStatus('Upload Failed');
@@ -63,13 +98,41 @@ export default function App() {
   };
   
 
+const debug_function = async () => {
+  Alert.alert("Debug Function Called!");
+}
+
+
+
+const connectToFirebase = async () => { 
+
+}
+
+
+
+
+
+
+
+
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Button title="Pick an image from gallery" onPress={pickImage} />
+
+      <Button title="Firebase Debug Button" onPress={debug_function}/>
+
+
+      <Button title="Pick an image from gallery" onPress={pickImage} /> 
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      
+      
+      
       <Button title="Upload Image" onPress={uploadImage} />
       {status && <Text>{status}</Text>}
+
+
+
+
     </View>
   );
 }

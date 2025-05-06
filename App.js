@@ -2,6 +2,8 @@ import React from "react";
 import RegisterScreen from "./screens/register-screen";
 import AddRecipeScreen from "./screens/add-recipe";
 import LoginScreen from "./screens/login-screen";
+import HomeScreen from "./screens/home";
+
 import {
   Button,
   Alert,
@@ -17,8 +19,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import HomeScreen from "./screens/home";
-import LoginScreen from "./screens/login-screen";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -34,7 +34,7 @@ const App = () => {
       <Stack.Navigator>
         <Stack.Screen name="Add Recipe" component={AddRecipeScreen}/>
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />  
-        <Stack.Screen name="Tabs" component={Tabs} />
+        <Stack.Screen name="Tabs" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   );
