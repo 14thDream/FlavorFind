@@ -117,6 +117,7 @@ const RecipeView = ({ id, onClose }) => {
 
   const [userId, setUserId] = useContext(UserContext);
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState({});
 
   const sendComment = async (comment) => {
     const commentPath = `posts/${recipe.id}/comments`;
@@ -134,6 +135,13 @@ const RecipeView = ({ id, onClose }) => {
     });
     setComment("");
   };
+
+  useEffect(() => {
+    onValue(ref(db, `posts/${id}/comments`), (snapshot) => {
+      const comments = Object.values(snapshot.val());
+      setComments(comments);
+    });
+  }, [id]);
 
   return (
     <View style={styles.recipeContainer}>
@@ -185,6 +193,8 @@ const RecipeView = ({ id, onClose }) => {
               numberOfLines={1}
               value={comment}
               onChangeText={setComment}
+              onSubmitEditing={() => sendComment(comment)}
+              blurOnSubmit // submitBehavior does not trigger onSubmitEditing
               placeholder="Add comment"
               style={styles.commentInputText}
             />
@@ -192,8 +202,36 @@ const RecipeView = ({ id, onClose }) => {
               <Ionicons name="caret-forward" size={28} color="black" />
             </Pressable>
           </View>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={comments}
+            renderItem={({ item }) => {
+              return <Comment data={item} />;
+            }}
+          />
         </View>
       </ScrollView>
+    </View>
+  );
+};
+
+const Comment = ({ data }) => {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const loadUsername = async (id) => {
+      const userRef = ref(db, `users/${id}`);
+      const user = await get(userRef);
+      setUsername(user.val().username);
+    };
+
+    loadUsername(data.userId);
+  }, [data]);
+
+  return (
+    <View style={styles.comment}>
+      <Text style={styles.commentUserText}>@{username}</Text>
+      <Text style={styles.commentText}>{data.message}</Text>
     </View>
   );
 };
@@ -317,6 +355,21 @@ const styles = StyleSheet.create({
   },
   commentInputText: {
     flex: 1,
+    fontFamily: fonts.primary,
+    fontSize: fonts.md,
+  },
+  comment: {
+    marginHorizontal: spacing.sm + spacing.xs,
+    marginTop: spacing.sm,
+    marginBottom: spacing.md - spacing.xs,
+  },
+  commentUserText: {
+    fontFamily: fonts.primary,
+    fontSize: fonts.md,
+    fontWeight: "bold",
+    marginBottom: 2,
+  },
+  commentText: {
     fontFamily: fonts.primary,
     fontSize: fonts.md,
   },
