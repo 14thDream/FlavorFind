@@ -102,6 +102,8 @@ const RegisterScreen = () => {
     }
   };
 
+
+  
   return (
     <View style={styles.container}>
       <Text style={styles.head_text}>FlavorFind User Registration</Text>/

@@ -33,7 +33,6 @@ const App = () => {
     
 
       <Stack.Navigator>
-        <Stack.Screen name ="Test File" component={TestFile}/>
         <Stack.Screen name="Add Recipe" component={AddRecipeScreen}/>
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />  
         <Stack.Screen name="Tabs" component={Main} />
