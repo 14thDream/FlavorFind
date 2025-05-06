@@ -2,8 +2,23 @@ import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { CommentButton, LikeButton } from "./Buttons";
 
 import { colors, fonts, spacing } from "../styles";
+import { useEffect, useState } from "react";
 
-const RecipePost = ({ username, title, uri, onPress }) => {
+import { ref, db } from "../firebaseConfig";
+import { get } from "firebase/database";
+
+const RecipePost = ({ userId, title, uri, onPress }) => {
+  const [username, setUsername] = useState("");
+  useEffect(() => {
+    const fetchUsername = async (id) => {
+      const userRef = ref(db, `users/${id}`);
+      const user = await get(userRef);
+      setUsername(user.val().username);
+    };
+
+    fetchUsername(userId);
+  }, [userId]);
+
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <Text style={[styles.text, styles.usernameText]}>@{username}</Text>

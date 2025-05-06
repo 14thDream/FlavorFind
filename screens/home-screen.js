@@ -82,7 +82,7 @@ const RecipeFeed = ({ data, onPress }) => {
       renderItem={({ item }) => (
         <View style={styles.recipePost}>
           <RecipePost
-            username={item.username}
+            userId={item.userId}
             title={item.title}
             uri={item.uri}
             onPress={() => onPress(item.id)}
@@ -94,6 +94,7 @@ const RecipeFeed = ({ data, onPress }) => {
 };
 
 const RecipeView = ({ id, onClose }) => {
+  const [username, setUsername] = useState("");
   const [recipe, setRecipe] = useState({});
   const ingredients =
     recipe && recipe.ingredients ? Object.values(recipe.ingredients) : [];
@@ -104,6 +105,10 @@ const RecipeView = ({ id, onClose }) => {
       const recipeRef = ref(db, `posts/${id}`);
       const recipe = await get(recipeRef);
       setRecipe(recipe.val());
+
+      const userRef = ref(db, `users/${recipe.val().userId}`);
+      const user = await get(userRef);
+      setUsername(user.val().username);
     };
 
     loadRecipe(id);
@@ -119,7 +124,7 @@ const RecipeView = ({ id, onClose }) => {
           }}
         </Pressable>
         <View>
-          <Text style={styles.recipeUserText}>@{recipe.username}</Text>
+          <Text style={styles.recipeUserText}>@{username}</Text>
           <Text style={styles.recipeTitleText}>{recipe.title}</Text>
         </View>
       </View>

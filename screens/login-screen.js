@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -21,10 +21,12 @@ import {
 import { Oswald_400Regular } from "@expo-google-fonts/oswald";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { UserContext } from "../Contexts";
 
 SplashScreen.preventAutoHideAsync();
 
 const LoginScreen = () => {
+  const [userId, setUserId] = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -47,6 +49,8 @@ const LoginScreen = () => {
     );
 
     if (foundUser) {
+      setUserId(foundUser.id);
+
       Alert.alert(
         "Login successful, Welcome back, " + foundUser.firstName + "!",
       );

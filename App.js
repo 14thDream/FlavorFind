@@ -1,4 +1,5 @@
-import { StyleSheet, Platform, StatusBar } from "react-native";
+import { useState } from "react";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -9,6 +10,7 @@ import LoginScreen from "./screens/login-screen";
 import RegisterScreen from "./screens/register-screen";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { UserContext } from "./Contexts";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -20,13 +22,17 @@ const routeIcons = {
 };
 
 const App = () => {
+  const [userId, setUserId] = useState(null);
+
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Main" component={Main} />
-      </Stack.Navigator>
+      <UserContext.Provider value={[userId, setUserId]}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Main" component={Main} />
+        </Stack.Navigator>
+      </UserContext.Provider>
     </NavigationContainer>
   );
 };
