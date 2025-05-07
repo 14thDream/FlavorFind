@@ -17,9 +17,9 @@ export const CommentButton = ({ size, color }) => {
   );
 };
 
-export const IconButton = ({ Icon, name, size, color, onPress }) => {
+export const IconButton = ({ Icon, name, size, color, style, onPress }) => {
   return (
-    <Pressable onPress={onPress}>
+    <Pressable style={style} onPress={onPress}>
       {({ pressed }) => {
         const iconName = `${name}${pressed ? "" : "-outline"}`;
         return <Icon name={iconName} size={size} color={color} />;
