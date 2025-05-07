@@ -1,5 +1,5 @@
-import { StyleSheet, View, Text, TextInput, FlatList } from "react-native";
-import { useState, useEffect, useMemo, useContext } from "react";
+import { StyleSheet, View, Text, TextInput } from "react-native";
+import { useState, useEffect, useMemo } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RecipeFeed from "../components/RecipeFeed";
