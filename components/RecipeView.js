@@ -60,10 +60,12 @@ const RecipeView = ({ id, mode, onClose }) => {
   };
 
   useEffect(() => {
-    onValue(ref(db, `posts/${id}/comments`), (snapshot) => {
+    const listener = onValue(ref(db, `posts/${id}/comments`), (snapshot) => {
       const comments = Object.values(snapshot.val());
       setComments(comments);
     });
+
+    return () => listener();
   }, [id]);
 
   return (
