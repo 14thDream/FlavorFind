@@ -15,22 +15,47 @@ import { get, set, onValue } from "firebase/database";
 import { ref, db, getNextId } from "../firebaseConfig";
 import { spacing, colors, fonts } from "../styles";
 import { UserContext } from "../Contexts";
+import EditableText from "./EditableText";
 
-const RecipeView = ({ id, mode, onClose }) => {
+const RecipeView = ({ id, editable, onClose }) => {
   const [username, setUsername] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [ingredients, setIngredients] = useState([]);
+  const [steps, setSteps] = useState([]);
   const [recipe, setRecipe] = useState({});
-  const ingredients = recipe?.ingredients
-    ? Object.values(recipe.ingredients)
-    : [];
-  const steps = recipe?.steps ? Object.values(recipe.steps) : [];
+
+  const handleIngredientsChange = (index, field, value) => {
+    const updatedIngredients = [...ingredients];
+    updatedIngredients[index][field] = value;
+    setIngredients(updatedIngredients);
+  };
+
+  const handleStepsChange = (index, value) => {
+    const updatedSteps = [...steps];
+    updatedSteps[index] = value;
+    setSteps(updatedSteps);
+  };
 
   useEffect(() => {
     const loadRecipe = async (id) => {
       const recipeRef = ref(db, `posts/${id}`);
-      const recipe = await get(recipeRef);
-      setRecipe(recipe.val());
+      const snapshot = await get(recipeRef);
 
-      const userRef = ref(db, `users/${recipe.val().userId}`);
+      const recipe = snapshot.val();
+      setRecipe(recipe);
+      setTitle(recipe.title);
+      setDescription(recipe.description);
+
+      const ingredients = recipe?.ingredients
+        ? Object.values(recipe.ingredients)
+        : [];
+      setIngredients(ingredients);
+
+      const steps = recipe?.steps ? Object.values(recipe.steps) : [];
+      setSteps(steps);
+
+      const userRef = ref(db, `users/${recipe.userId}`);
       const user = await get(userRef);
       setUsername(user.val().username);
     };
@@ -80,8 +105,21 @@ const RecipeView = ({ id, mode, onClose }) => {
           style={styles.backButton}
         />
         <View style={{ flex: 1 }}>
-          <Text style={styles.username}>@{username}</Text>
-          <TextInput editable style={styles.title} value={recipe.title} />
+          <View style={styles.usernameContainer}>
+            <Text style={styles.username}>@</Text>
+            <EditableText
+              editable={editable}
+              value={username}
+              onChangeText={setUsername}
+              style={styles.username}
+            />
+          </View>
+          <EditableText
+            editable={editable}
+            value={title}
+            onChangeText={setTitle}
+            style={styles.title}
+          />
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -91,15 +129,41 @@ const RecipeView = ({ id, mode, onClose }) => {
             <LikeButton size={28} color="black" />
             <CommentButton size={28} color="black" />
           </View>
-          <Text style={styles.description}>{recipe.description}</Text>
+          <EditableText
+            multiline
+            rows={6}
+            editable={editable}
+            value={description}
+            onChangeText={setDescription}
+            style={styles.description}
+          />
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionText}>Ingredients</Text>
           </View>
           <View style={styles.list}>
             {ingredients.map((item, index) => (
-              <Text key={index} style={styles.listText}>
-                • {item.name} : {item.amount}
-              </Text>
+              <View style={styles.row}>
+                <Text style={styles.listIndent}>•</Text>
+                <EditableText
+                  editable={editable}
+                  style={styles.ingredientName}
+                  value={ingredients[index].name}
+                  onChangeText={(value) =>
+                    handleIngredientsChange(index, "name", value)
+                  }
+                />
+                <Text style={styles.ingredientSeparator}>:</Text>
+                <View style={styles.ingredientAmount}>
+                  <EditableText
+                    editable={editable}
+                    style={styles.listText}
+                    value={ingredients[index].amount}
+                    onChangeText={(value) =>
+                      handleIngredientsChange(index, "amount", value)
+                    }
+                  />
+                </View>
+              </View>
             ))}
           </View>
           <View style={styles.sectionHeader}>
@@ -107,9 +171,15 @@ const RecipeView = ({ id, mode, onClose }) => {
           </View>
           <View style={styles.list}>
             {steps.map((item, index) => (
-              <Text key={index} style={styles.listText}>
-                {index + 1}. {item}
-              </Text>
+              <View style={styles.row}>
+                <Text style={styles.listIndent}>{index + 1}.</Text>
+                <EditableText
+                  editable={editable}
+                  value={steps[index]}
+                  style={styles.listText}
+                  onChangeText={(value) => handleStepsChange(index, value)}
+                />
+              </View>
             ))}
           </View>
         </View>
@@ -117,7 +187,7 @@ const RecipeView = ({ id, mode, onClose }) => {
           <View style={styles.commentInput}>
             <TextInput
               multiline
-              numberOfLines={1}
+              rows={1}
               value={comment}
               onChangeText={setComment}
               onSubmitEditing={() => sendComment(comment)}
@@ -179,6 +249,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 20,
   },
+  usernameContainer: {
+    flexDirection: "row",
+    gap: 1,
+  },
   username: {
     fontFamily: fonts.primary,
     fontSize: fonts.sm,
@@ -233,6 +307,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
   },
+  row: {
+    flexDirection: "row",
+  },
+  listIndent: {
+    marginRight: spacing.sm,
+  },
+  ingredientSeparator: {
+    flex: 1,
+    textAlign: "center",
+  },
+  ingredientName: {
+    fontFamily: fonts.primary,
+    fontSize: fonts.md,
+    fontWeight: "bold",
+    flex: 9,
+  },
+  ingredientAmount: {
+    flex: 3,
+  },
   list: {
     marginHorizontal: spacing.sm,
     marginBottom: spacing.sm,
@@ -240,6 +333,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   listText: {
+    flex: 1,
     fontFamily: fonts.primary,
     fontSize: fonts.md,
     fontWeight: "bold",
