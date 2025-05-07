@@ -46,6 +46,7 @@ const HomeScreen = () => {
         <RecipeFeed data={visiblePosts} onPress={setSelectedRecipeId} />
       ) : (
         <RecipeView
+          editable
           id={selectedRecipeId}
           onClose={() => setSelectedRecipeId(null)}
         />

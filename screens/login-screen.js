@@ -52,7 +52,7 @@ const LoginScreen = () => {
       setUserId(foundUser.id);
 
       Alert.alert(
-        "Login successful, Welcome back, " + foundUser.firstName + "!",
+        "Login successful, Welcome back, " + foundUser.username + "!",
       );
       navigator.navigate("Main");
     } else {

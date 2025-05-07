@@ -25,6 +25,10 @@ const RecipeView = ({ id, editable, onClose }) => {
   const [steps, setSteps] = useState([]);
   const [recipe, setRecipe] = useState({});
 
+  const [newIngredient, setNewIngredient] = useState("");
+  const [newAmount, setNewAmount] = useState("");
+  const [newStep, setNewStep] = useState("");
+
   const listStyle = editable
     ? StyleSheet.compose(styles.list, { marginRight: 0 })
     : styles.list;
@@ -39,6 +43,17 @@ const RecipeView = ({ id, editable, onClose }) => {
     const updatedSteps = [...steps];
     updatedSteps[index] = value;
     setSteps(updatedSteps);
+  };
+
+  const addStep = () => {
+    if (!newStep.trim()) {
+      return;
+    }
+
+    const updatedSteps = [...steps, newStep];
+    setSteps(updatedSteps);
+
+    setNewStep("");
   };
 
   const deleteIngredient = (index) => {
@@ -150,7 +165,7 @@ const RecipeView = ({ id, editable, onClose }) => {
           </View>
           <View style={listStyle}>
             {ingredients.map((item, index) => (
-              <View style={styles.row}>
+              <View key={index} style={styles.row}>
                 <Text style={styles.listIndent}>•</Text>
                 <EditableText
                   editable={editable}
@@ -191,7 +206,7 @@ const RecipeView = ({ id, editable, onClose }) => {
           </View>
           <View style={listStyle}>
             {steps.map((item, index) => (
-              <View style={styles.row}>
+              <View key={index} style={styles.row}>
                 <Text style={styles.listIndent}>{index + 1}.</Text>
                 <EditableText
                   editable={editable}
@@ -212,6 +227,15 @@ const RecipeView = ({ id, editable, onClose }) => {
                 ) : null}
               </View>
             ))}
+            {editable ? (
+              <TextInput
+                placeholder="Add step"
+                value={newStep}
+                onChangeText={setNewStep}
+                onEndEditing={addStep}
+                style={styles.listText}
+              />
+            ) : null}
           </View>
         </View>
         <View style={styles.card}>
