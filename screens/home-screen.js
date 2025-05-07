@@ -1,10 +1,9 @@
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useState, useEffect, useMemo } from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import SearchHeader from "../components/SearchHeader.js";
 import RecipeFeed from "../components/RecipeFeed";
 import RecipeView from "../components/RecipeView";
-import { spacing, fonts, colors } from "../styles";
+import { colors } from "../styles";
 import { onValue } from "firebase/database";
 import { ref, db } from "../firebaseConfig";
 
@@ -42,16 +41,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Ionicons name="menu" size={24} color="black" />
-        <Text style={styles.headerText}>FlavorFind</Text>
-        <TextInput
-          style={styles.searchBar}
-          placeholder="Search Recipe"
-          onChangeText={setSearchQuery}
-        />
-        <FontAwesome name="search" size={24} color="black" />
-      </View>
+      <SearchHeader size={24} color="black" onChangeText={setSearchQuery} />
       {selectedRecipeId === null ? (
         <RecipeFeed data={visiblePosts} onPress={setSelectedRecipeId} />
       ) : (
@@ -68,25 +58,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: spacing.sm,
-    padding: spacing.xs,
-    gap: spacing.sm,
-    backgroundColor: colors.primary,
-  },
-  headerText: {
-    fontFamily: fonts.primary,
-    fontSize: fonts.md,
-    fontWeight: "bold",
-  },
-  searchBar: {
-    flex: 1,
-    paddingHorizontal: spacing.xs,
-    fontFamily: fonts.primary,
-    borderWidth: 1,
   },
 });
 
