@@ -25,6 +25,10 @@ const RecipeView = ({ id, editable, onClose }) => {
   const [steps, setSteps] = useState([]);
   const [recipe, setRecipe] = useState({});
 
+  const listStyle = editable
+    ? StyleSheet.compose(styles.list, { marginRight: 0 })
+    : styles.list;
+
   const handleIngredientsChange = (index, field, value) => {
     const updatedIngredients = [...ingredients];
     updatedIngredients[index][field] = value;
@@ -35,6 +39,16 @@ const RecipeView = ({ id, editable, onClose }) => {
     const updatedSteps = [...steps];
     updatedSteps[index] = value;
     setSteps(updatedSteps);
+  };
+
+  const deleteIngredient = (index) => {
+    const remainingIngredients = ingredients.filter((_, i) => i !== index);
+    setIngredients(remainingIngredients);
+  };
+
+  const deleteStep = (index) => {
+    const remainingSteps = steps.filter((_, i) => i !== index);
+    setSteps(remainingSteps);
   };
 
   useEffect(() => {
@@ -140,7 +154,7 @@ const RecipeView = ({ id, editable, onClose }) => {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionText}>Ingredients</Text>
           </View>
-          <View style={styles.list}>
+          <View style={listStyle}>
             {ingredients.map((item, index) => (
               <View style={styles.row}>
                 <Text style={styles.listIndent}>•</Text>
@@ -163,13 +177,23 @@ const RecipeView = ({ id, editable, onClose }) => {
                     }
                   />
                 </View>
+                {editable ? (
+                  <IconButton
+                    Icon={Ionicons}
+                    name="remove"
+                    size={24}
+                    color="red"
+                    style={styles.removeButton}
+                    onPress={() => deleteIngredient(index)}
+                  />
+                ) : null}
               </View>
             ))}
           </View>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionText}>Steps</Text>
           </View>
-          <View style={styles.list}>
+          <View style={listStyle}>
             {steps.map((item, index) => (
               <View style={styles.row}>
                 <Text style={styles.listIndent}>{index + 1}.</Text>
@@ -179,6 +203,16 @@ const RecipeView = ({ id, editable, onClose }) => {
                   style={styles.listText}
                   onChangeText={(value) => handleStepsChange(index, value)}
                 />
+                {editable ? (
+                  <IconButton
+                    Icon={Ionicons}
+                    name="remove"
+                    size={24}
+                    color="red"
+                    style={styles.removeButton}
+                    onPress={() => deleteStep(index)}
+                  />
+                ) : null}
               </View>
             ))}
           </View>
@@ -366,6 +400,10 @@ const styles = StyleSheet.create({
   commentText: {
     fontFamily: fonts.primary,
     fontSize: fonts.md,
+  },
+  removeButton: {
+    marginLeft: spacing.xs,
+    marginRight: spacing.sm,
   },
 });
 
