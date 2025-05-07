@@ -119,17 +119,10 @@ const RecipeView = ({ id, editable, onClose }) => {
           style={styles.backButton}
         />
         <View style={{ flex: 1 }}>
-          <View style={styles.usernameContainer}>
-            <Text style={styles.username}>@</Text>
-            <EditableText
-              editable={editable}
-              value={username}
-              onChangeText={setUsername}
-              style={styles.username}
-            />
-          </View>
+          <Text style={styles.username}>{username}</Text>
           <EditableText
             editable={editable}
+            placeholder="Add Title"
             value={title}
             onChangeText={setTitle}
             style={styles.title}
@@ -147,6 +140,7 @@ const RecipeView = ({ id, editable, onClose }) => {
             multiline
             rows={6}
             editable={editable}
+            placeholder="Add Description"
             value={description}
             onChangeText={setDescription}
             style={styles.description}
@@ -161,6 +155,7 @@ const RecipeView = ({ id, editable, onClose }) => {
                 <EditableText
                   editable={editable}
                   style={styles.ingredientName}
+                  placeholder="Add Ingredient"
                   value={ingredients[index].name}
                   onChangeText={(value) =>
                     handleIngredientsChange(index, "name", value)
@@ -171,6 +166,7 @@ const RecipeView = ({ id, editable, onClose }) => {
                   <EditableText
                     editable={editable}
                     style={styles.listText}
+                    placeholder="Enter amount"
                     value={ingredients[index].amount}
                     onChangeText={(value) =>
                       handleIngredientsChange(index, "amount", value)
@@ -199,6 +195,7 @@ const RecipeView = ({ id, editable, onClose }) => {
                 <Text style={styles.listIndent}>{index + 1}.</Text>
                 <EditableText
                   editable={editable}
+                  placeholder="Add step"
                   value={steps[index]}
                   style={styles.listText}
                   onChangeText={(value) => handleStepsChange(index, value)}
@@ -282,10 +279,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     backgroundColor: colors.primary,
     borderRadius: 20,
-  },
-  usernameContainer: {
-    flexDirection: "row",
-    gap: 1,
   },
   username: {
     fontFamily: fonts.primary,

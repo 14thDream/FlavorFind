@@ -1,6 +1,7 @@
 import { Text, TextInput } from "react-native";
 
 const EditableText = ({
+  placeholder,
   value,
   onChangeText,
   rows,
@@ -13,6 +14,8 @@ const EditableText = ({
     <TextInput
       multiline={multiline}
       rows={rows}
+      placeholder={placeholder}
+      placeholderTextColor="gray"
       value={value}
       onChangeText={onChangeText}
       style={[style, inputStyle]}
