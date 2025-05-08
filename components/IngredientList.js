@@ -45,7 +45,7 @@ const IngredientList = ({ editable }) => {
   return (
     <View style={styles.container}>
       {recipe.ingredients?.map((ingredient, index) => (
-        <View style={styles.item}>
+        <View key={index} style={styles.item}>
           <View style={styles.nameContainer}>
             <Text style={styles.indent}>•</Text>
             <EditableText
