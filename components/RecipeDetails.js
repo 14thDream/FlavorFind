@@ -112,9 +112,11 @@ const RecipeDetails = ({ editable, onSave }) => {
         <SectionHeader text="STEPS" />
         <StepList editable={editable} />
       </View>
-      <TouchableOpacity style={styles.saveButton} onPress={saveRecipe}>
-        <Text style={styles.saveButtonText}>SAVE RECIPE</Text>
-      </TouchableOpacity>
+      {editable && (
+        <TouchableOpacity style={styles.saveButton} onPress={saveRecipe}>
+          <Text style={styles.saveButtonText}>SAVE RECIPE</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
