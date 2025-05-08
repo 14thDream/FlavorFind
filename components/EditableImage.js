@@ -16,8 +16,9 @@ const EditableImage = ({ editable }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const pickImage = async () => {
-    let permissionResult = await ImagePicker.getMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
       alert("Permission to access media library is required");
       return;
     }
