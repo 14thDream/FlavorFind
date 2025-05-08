@@ -115,6 +115,10 @@ const RecipeView = ({ id, editable, onClose }) => {
 
   useEffect(() => {
     const listener = onValue(ref(db, `posts/${id}/comments`), (snapshot) => {
+      if (!snapshot.exists()) {
+        return;
+      }
+
       const comments = Object.values(snapshot.val());
       setComments(comments);
     });
