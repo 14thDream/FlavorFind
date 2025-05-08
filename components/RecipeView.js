@@ -138,7 +138,7 @@ const RecipeView = ({ id, editable, onClose }) => {
           style={styles.backButton}
         />
         <View style={{ flex: 1 }}>
-          <Text style={styles.username}>{username}</Text>
+          <Text style={styles.username}>@{username}</Text>
           <EditableText
             editable={editable}
             placeholder="Add Title"
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     backgroundColor: colors.highlight,
     borderRadius: 20,
-  },  
+  },
   commentInput: {
     flexDirection: "row",
     alignItems: "center",
