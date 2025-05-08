@@ -11,10 +11,13 @@ const CreateScreen = () => {
   return (
     <View style={styles.container}>
       <RecipeContext.Provider value={[recipe, setRecipe]}>
-        <View style={styles.header}>
-          <RecipeNavigationHeader editable />
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          stickyHeaderIndices={[0]}
+        >
+          <View style={styles.header}>
+            <RecipeNavigationHeader editable />
+          </View>
           <RecipeDetails editable />
         </ScrollView>
       </RecipeContext.Provider>

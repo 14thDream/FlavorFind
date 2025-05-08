@@ -9,13 +9,14 @@ const RecipeView = ({ isEditable }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <RecipeNavigationHeader editable={editable} onEdit={setEditable} />
-      </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollingContainer}
+        stickyHeaderIndices={[0]}
       >
+        <View style={styles.header}>
+          <RecipeNavigationHeader editable={editable} onEdit={setEditable} />
+        </View>
         <RecipeDetails editable={editable} />
       </ScrollView>
     </View>
