@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     backgroundColor: colors.primary,
   },
-  headerText: {
+  text: {
     fontFamily: fonts.primary,
     fontSize: fonts.md,
     fontWeight: "bold",

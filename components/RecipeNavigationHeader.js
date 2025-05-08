@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     backgroundColor: colors.primary,
+    borderWidth: 2,
     borderRadius: 20,
   },
   username: {
