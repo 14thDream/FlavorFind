@@ -18,15 +18,22 @@ const RecipeDetails = ({ editable, onSave }) => {
         <LikeButton size={28} color="black" />
         <CommentButton size={28} color="black" />
       </View>
-      <EditableText
-        multiline
-        rows={6}
-        isEditable={editable}
-        placeholder="Add Description"
-        style={styles.description}
-        value={recipe.description}
-        onChangeText={(text) => setRecipe({ ...recipe, description: text })}
-      />
+      <View
+        style={[
+          { marginBottom: spacing.sm },
+          editable ? styles.editDescription : {},
+        ]}
+      >
+        <EditableText
+          multiline
+          rows={6}
+          isEditable={editable}
+          placeholder="Add Description"
+          style={styles.description}
+          value={recipe.description}
+          onChangeText={(text) => setRecipe({ ...recipe, description: text })}
+        />
+      </View>
       <View style={styles.list}>
         <SectionHeader text="INGREDIENTS" />
         <IngredientList editable={editable} />
@@ -63,10 +70,15 @@ const styles = StyleSheet.create({
   },
   description: {
     marginHorizontal: spacing.xs,
-    marginBottom: spacing.sm,
     fontFamily: fonts.primary,
     fontSize: fonts.md,
     fontWeight: "bold",
+  },
+  editDescription: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    backgroundColor: colors.highlight,
+    borderRadius: 10,
   },
   list: {
     marginBottom: spacing.sm,
