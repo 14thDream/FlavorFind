@@ -4,6 +4,7 @@ import AddRecipeScreen from "./screens/add-recipe";
 import LoginScreen from "./screens/login-screen";
 import HomeScreen from "./screens/home";
 import TestFile from "./screens/test-file";
+import ProfileScreen from "./screens/ignore-me";
 
 import {
   Button,
@@ -33,6 +34,7 @@ const App = () => {
     
 
       <Stack.Navigator>
+        <Stack.Screen name="Profile Screen" component={ProfileScreen}/>
         <Stack.Screen name="Add Recipe" component={AddRecipeScreen}/>
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />  
         <Stack.Screen name="Tabs" component={Main} />
@@ -71,7 +73,7 @@ const Main = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="My Recipes" component={HomeScreen} />
       <Tab.Screen name="Create" component={HomeScreen} />
-      <Tab.Screen name="Profile" component={HomeScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 };
