@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { useState, useEffect, useMemo, useContext } from "react";
+import { useState, useEffect, useMemo, useContext, useCallback } from "react";
 import SearchHeader from "../components/SearchHeader.js";
 import RecipeFeed from "../components/RecipeFeed";
 import RecipeView from "../screens/view-recipe.js";
@@ -7,6 +7,7 @@ import { colors, spacing } from "../styles";
 import { onValue } from "firebase/database";
 import { ref, db } from "../firebaseConfig";
 import { RecipeContext } from "../Contexts.js";
+import { useFocusEffect } from "@react-navigation/native";
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -39,6 +40,8 @@ const HomeScreen = () => {
 
     return () => listener();
   }, []);
+
+  useFocusEffect(useCallback(() => setRecipe(null), [setRecipe]));
 
   return (
     <View style={styles.container}>
