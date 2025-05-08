@@ -1,13 +1,13 @@
 import { StyleSheet, View } from "react-native";
-import { useState, useEffect, useMemo, useContext, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import SearchHeader from "../components/SearchHeader.js";
 import RecipeFeed from "../components/RecipeFeed";
 import RecipeView from "../screens/view-recipe.js";
 import { colors, spacing } from "../styles";
 import { onValue } from "firebase/database";
 import { ref, db } from "../firebaseConfig";
-import { RecipeContext } from "../Contexts.js";
 import { useFocusEffect } from "@react-navigation/native";
+import { RecipeContext } from "../Contexts.js";
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -25,7 +25,7 @@ const isSearchableBy = (title, keywords) => {
 
 const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [recipe, setRecipe] = useContext(RecipeContext);
+  const [recipe, setRecipe] = useState(null);
   const [posts, setPosts] = useState([]);
 
   const visiblePosts = useMemo(() => {
@@ -41,8 +41,6 @@ const HomeScreen = () => {
     return () => listener();
   }, []);
 
-  useFocusEffect(useCallback(() => setRecipe(null), [setRecipe]));
-
   return (
     <View style={styles.container}>
       <SearchHeader size={24} color="black" onChangeText={setSearchQuery} />
@@ -53,7 +51,9 @@ const HomeScreen = () => {
           onPress={setRecipe}
         />
       ) : (
-        <RecipeView />
+        <RecipeContext.Provider value={[recipe, setRecipe]}>
+          <RecipeView />
+        </RecipeContext.Provider>
       )}
     </View>
   );
