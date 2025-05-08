@@ -353,6 +353,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm + spacing.xs,
     marginBottom: spacing.sm,
     paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
     backgroundColor: colors.highlight,
     borderRadius: 10,
   },
@@ -384,17 +385,18 @@ const styles = StyleSheet.create({
   list: {
     marginBottom: spacing.sm,
     paddingHorizontal: spacing.xs,
-    gap: spacing.xs,
+    gap: 1,
   },
   listText: {
     flex: 1,
+    alignItems: "center",
     fontFamily: fonts.primary,
     fontSize: fonts.md,
     fontWeight: "bold",
   },
   addListItem: {
     flex: 1,
-    marginTop: spacing.xs,
+    marginTop: spacing.sm,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     fontFamily: fonts.primary,
