@@ -1,27 +1,10 @@
 import { Text, TextInput } from "react-native";
 
-const EditableText = ({
-  placeholder,
-  value,
-  onChangeText,
-  rows,
-  multiline,
-  editable,
-  style,
-  inputStyle,
-}) => {
-  return editable ? (
-    <TextInput
-      multiline={multiline}
-      rows={rows}
-      placeholder={placeholder}
-      placeholderTextColor="gray"
-      value={value}
-      onChangeText={onChangeText}
-      style={[style, inputStyle]}
-    />
+const EditableText = (props) => {
+  return props.isEditable ? (
+    <TextInput {...props} placeholderTextColor="gray" />
   ) : (
-    <Text style={style}>{value}</Text>
+    <Text style={props.style}>{props.value}</Text>
   );
 };
 

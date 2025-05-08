@@ -1,31 +1,28 @@
-import { StyleSheet, View, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import RecipePost from "./RecipePost";
-import { spacing } from "../styles";
 
-const RecipeFeed = ({ data, onPress }) => {
+const RecipeFeed = ({ itemStyle, data, onPress }) => {
+  const renderItem = ({ item }) => {
+    return (
+      <View style={itemStyle}>
+        <RecipePost
+          userId={item.userId}
+          title={item.title}
+          uri={item.uri}
+          onPress={() => onPress(item)}
+        />
+      </View>
+    );
+  };
+
   return (
     <FlatList
       showsVerticalScrollIndicator={false}
       data={data}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View style={styles.post}>
-          <RecipePost
-            userId={item.userId}
-            title={item.title}
-            uri={item.uri}
-            onPress={() => onPress(item.id)}
-          />
-        </View>
-      )}
+      renderItem={renderItem}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  post: {
-    margin: spacing.sm,
-  },
-});
 
 export default RecipeFeed;

@@ -2,10 +2,11 @@ import { StyleSheet, View } from "react-native";
 import { useState, useEffect, useMemo } from "react";
 import SearchHeader from "../components/SearchHeader.js";
 import RecipeFeed from "../components/RecipeFeed";
-import RecipeView from "../components/RecipeView";
-import { colors } from "../styles";
+import RecipeView from "../screens/view-recipe.js";
+import { colors, spacing } from "../styles";
 import { onValue } from "firebase/database";
 import { ref, db } from "../firebaseConfig";
+import { RecipeContext } from "../Contexts.js";
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -23,9 +24,9 @@ const isSearchableBy = (title, keywords) => {
 
 const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRecipeId, setSelectedRecipeId] = useState(null);
-
+  const [recipe, setRecipe] = useState(null);
   const [posts, setPosts] = useState([]);
+  
   const visiblePosts = useMemo(() => {
     return posts.filter(({ title }) => isSearchableBy(title, searchQuery));
   }, [posts, searchQuery]);
@@ -42,14 +43,16 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <SearchHeader size={24} color="black" onChangeText={setSearchQuery} />
-      {selectedRecipeId === null ? (
-        <RecipeFeed data={visiblePosts} onPress={setSelectedRecipeId} />
-      ) : (
-        <RecipeView
-          editable
-          id={selectedRecipeId}
-          onClose={() => setSelectedRecipeId(null)}
+      {recipe === null ? (
+        <RecipeFeed
+          itemStyle={styles.feed}
+          data={visiblePosts}
+          onPress={setRecipe}
         />
+      ) : (
+        <RecipeContext.Provider value={[recipe, setRecipe]}>
+          <RecipeView isEditable />
+        </RecipeContext.Provider>
       )}
     </View>
   );
@@ -59,6 +62,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  feed: {
+    margin: spacing.sm,
   },
 });
 
