@@ -50,7 +50,7 @@ const HomeScreen = () => {
           onPress={setRecipe}
         />
       ) : (
-        <RecipeView isEditable />
+        <RecipeView />
       )}
     </View>
   );
