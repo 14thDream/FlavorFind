@@ -234,9 +234,10 @@ const RecipeView = ({ id, editable, onClose }) => {
             {editable ? (
               <TextInput
                 placeholder="Add step"
+                placeholderTextColor="gray"
                 value={newStep}
                 onChangeText={setNewStep}
-                onEndEditing={addStep}
+                onBlur={addStep}
                 style={styles.listText}
               />
             ) : null}
