@@ -29,10 +29,10 @@ const App = () => {
     <NavigationContainer>
       <UserContext.Provider value={[userId, setUserId]}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
           
         </Stack.Navigator>
       </UserContext.Provider>

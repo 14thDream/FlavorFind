@@ -1,31 +1,13 @@
-import React, { useContext, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-  Pressable,
-  ImageBackground,
-  Image,
-} from "react-native";
-import { db, ref } from "../firebaseConfig";
-import { get, child } from "firebase/database";
-import { useNavigation } from "@react-navigation/native";
-import { spacing, colors, fonts } from "../styles";
+import { useState, useEffect, useMemo } from "react";
+import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Image } from "react-native";
+import { fonts } from "../styles"; // Ensure these are defined elsewhere
+import { onValue } from "firebase/database";
+import { ref, db } from "../firebaseConfig";
+import RecipeFeed from "../components/RecipeFeed";
+import RecipeView from "../components/RecipeView";
 
-import {
-  PoetsenOne_400Regular,
-  useFonts,
-} from "@expo-google-fonts/poetsen-one";
-import { Oswald_400Regular } from "@expo-google-fonts/oswald";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import { UserContext } from "../Contexts";
-
-const Background = require("../assets/images/authentication-background.jpg");
-const DefaultProfileURL = "https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
+const DefaultProfileURL =
+  "https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -42,136 +24,141 @@ const isSearchableBy = (title, keywords) => {
 };
 
 const ProfileScreen = () => {
- 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedRecipeId, setSelectedRecipeId] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const visiblePosts = useMemo(() => {
+    return posts.filter(({ title }) => isSearchableBy(title, searchQuery));
+  }, [posts, searchQuery]);
+
+  useEffect(() => {
+    const listener = onValue(ref(db, "posts"), (snapshot) => {
+      const posts = Object.values(snapshot.val());
+      setPosts(posts);
+    });
+
+    return () => listener();
+  }, []);
+
   return (
     <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* Profile Card */}
+        <View style={styles.profileCard}>
+          <Image source={{ uri: DefaultProfileURL }} style={styles.profileImage} />
+          <Text style={styles.username}>@CaoBreaded</Text>
+          <Text style={styles.email}>caobreaded@gmail.com</Text>
+          
+          
+          <TouchableOpacity style={styles.signOutButton}>
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
+          
+
+        </View>
+
+        <View style={styles.buttonBarContainer}>
+          <TouchableOpacity style={styles.containerButtons}>
+            <Text style={styles.signOutText}>MY RECIPES</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.containerButtons}>
+            <Text style={styles.signOutText}>FAVORITES</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Recipe Feed */}
 
 
-        <View style={styles.container2}>
-            <View style={styles.profile_box}>
-                <Image source={{ uri: DefaultProfileURL }} style={styles.image} />
-            </View>
-            <Text style={styles.username_text}>@ + username goes here</Text>
+        <View style={styles.container3}>
+          {selectedRecipeId === null ? (
+            <RecipeFeed data={visiblePosts} onPress={setSelectedRecipeId} />
+          ) : (
+            <RecipeView
+              editable
+              id={selectedRecipeId}
+              onClose={() => setSelectedRecipeId(null)}
+            />
+          )}
         </View>
 
 
         
+      </ScrollView>
     </View>
   );
 };
 
-
-
-
-
-
 const styles = StyleSheet.create({
-  profile_box: {
-    height: '15%', // or any fixed height
-    width: '50%',  // match the height for a square box
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderRadius: 150,
-    overflow: 'hidden', // ensures image is clipped within the border radius
-  },
-  
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover', // or 'contain' depending on the desired fit
-  },
-  username_text: {
-    fontSize: 12, 
-    fontFamily: fonts.primary,
-  },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-    alignItems: 'center', 
+    backgroundColor: "#FFD966", // yellow background
+  },
+  scrollContainer: {
+    alignItems: "center",
+    paddingVertical: 15,
+  },
+  profileCard: {
+    backgroundColor: "white",
+    width: "95%",
+    borderRadius: 20,
+    alignItems: "center",
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  buttonBarContainer: {
+    backgroundColor: "white",
+    width: "95%",
+    borderRadius: 20,
+    flexDirection: "row", // This makes the buttons align horizontally
+    justifyContent: "space-between", // This distributes space between buttons
+    alignItems: "center", // This centers the buttons vertically
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginBottom: 10,
   },
   container2: {
-    backgroundColor: 'white',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    margin: 5,
-    marginTop: '20%',
-    padding: 10, 
-    height: '50%',
-    width: '90%',
+    width: "95%",  // Make this the same as the profile card
+    marginBottom: 20,
   },
-  background: {
-    width: "100%",
-    height: "100%",
-    paddingHorizontal: spacing.sm,
-    justifyContent: "center",
-    alignItems: "center",
+  container3: {
+    width: "100%",  // Make this the same as the profile card
+    marginBottom: 20,
   },
-  backgroundImage: {
-    opacity: 0.2,
-  },
-  card: {
-    width: "100%",
-    opacity: 1,
-    alignItems: "center",
-    backgroundColor: colors.primary,
-    borderRadius: 20,
-  },
-  logoText: {
-    marginTop: spacing.xl,
-    fontSize: 48,
-    fontFamily: fonts.primary,
-    fontWeight: "bold",
-  },
-  loginText: {
-    alignSelf: "flex-start",
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.md + spacing.sm,
-    marginBottom: spacing.md,
-    fontSize: 40,
-    fontFamily: fonts.stylized,
-  },
-  inputGroup: {
-    alignSelf: "stretch",
-    marginHorizontal: spacing.lg,
-    gap: spacing.sm,
-  },
-  input: {
-    alignSelf: "stretch",
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
+  profileImage: {
+    width: 165,
+    height: 120,
+    borderRadius: 60,
     borderWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: 16,
+  },
+  username: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  email: {
+    fontSize: 14,
+    color: "gray",
+    marginBottom: 20,
+  },
+  signOutButton: {
+    backgroundColor: "#D9D9D9",
+    paddingVertical: 10,
+    paddingHorizontal: 100,
     borderRadius: 10,
-    fontSize: 20,
-    fontFamily: fonts.body,
   },
-  loginButton: {
-    minHeight: 40,
-    alignSelf: "stretch",
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.lg + spacing.md,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.background,
+  containerButtons:{
+      backgroundColor: "#D9D9D9",
+      paddingVertical: 10,
+      paddingHorizontal: 35,
+      borderRadius: 10,
   },
-  loginButtonText: {
-    fontSize: 20,
-    fontFamily: fonts.body,
-    textTransform: "uppercase",
-  },
-  noAccount: {
-    flexDirection: "row",
-    alignSelf: "flex-end",
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.xs,
-    marginBottom: 60,
-  },
-  noAccountText: {
-    fontSize: 18,
-    fontFamily: fonts.body,
-  },
-  signUpText: {
-    marginLeft: spacing.xs,
-    color: colors.link,
+  signOutText: {
+    fontSize: 16,
+    fontFamily: fonts?.body || "System",
   },
 });
 
