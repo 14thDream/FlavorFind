@@ -20,6 +20,7 @@ const EditableImage = ({ editable }) => {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
       alert("Permission to access media library is required");
+      return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
