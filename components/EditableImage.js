@@ -7,12 +7,27 @@ import {
   ImageBackground,
   Pressable,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import { RecipeContext } from "../Contexts";
 import { spacing, colors, fonts } from "../styles";
 
 const EditableImage = ({ editable }) => {
   const [recipe, setRecipe] = useContext(RecipeContext);
   const [isHovered, setIsHovered] = useState(false);
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: "true",
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setRecipe({ ...recipe, uri: uri });
+    }
+  };
 
   return (
     <View style={styles.container}>
