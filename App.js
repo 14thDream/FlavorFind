@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import HomeScreen from "./screens/home-screen";
 import LoginScreen from "./screens/login-screen";
 import RegisterScreen from "./screens/register-screen";
+import ProfileScreen from "./screens/profile-screen";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { UserContext } from "./Contexts";
@@ -28,9 +29,11 @@ const App = () => {
     <NavigationContainer>
       <UserContext.Provider value={[userId, setUserId]}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Main" component={Main} />
+          
         </Stack.Navigator>
       </UserContext.Provider>
     </NavigationContainer>
@@ -55,7 +58,7 @@ const Main = () => {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="My Recipes" component={HomeScreen} />
         <Tab.Screen name="Create" component={HomeScreen} />
-        <Tab.Screen name="Profile" component={HomeScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </SafeAreaView>
   );
