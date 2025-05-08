@@ -18,7 +18,7 @@ const IngredientList = ({ editable }) => {
 
     const newIngredient = { name: name, amount: amount };
     const updatedIngredients = [
-      ...Object.values(recipe.ingredients),
+      ...Object.values(recipe.ingredients ? recipe.ingredients : []),
       newIngredient,
     ];
 
@@ -36,7 +36,7 @@ const IngredientList = ({ editable }) => {
 
   const deleteIngredient = (index) => {
     const remainingIngredients = recipe.ingredients.filter(
-      (_, i) => i !== index
+      (_, i) => i !== index,
     );
 
     setRecipe({ ...recipe, ingredients: remainingIngredients });
@@ -44,7 +44,7 @@ const IngredientList = ({ editable }) => {
 
   return (
     <View style={styles.container}>
-      {recipe.ingredients.map((ingredient, index) => (
+      {recipe.ingredients?.map((ingredient, index) => (
         <View style={styles.item}>
           <View style={styles.nameContainer}>
             <Text style={styles.indent}>•</Text>

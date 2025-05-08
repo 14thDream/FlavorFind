@@ -15,7 +15,10 @@ const StepList = ({ editable }) => {
       return;
     }
 
-    const updatedSteps = [...Object.values(recipe.steps), step];
+    const updatedSteps = [
+      ...Object.values(recipe.steps ? recipe.steps : []),
+      step,
+    ];
 
     setRecipe({ ...recipe, steps: updatedSteps });
     setStep("");
@@ -36,7 +39,7 @@ const StepList = ({ editable }) => {
 
   return (
     <View style={styles.container}>
-      {recipe.steps.map((step, index) => (
+      {recipe.steps?.map((step, index) => (
         <View style={styles.item}>
           <Text style={styles.indent}>{index + 1}.</Text>
           <EditableText
