@@ -41,8 +41,8 @@ const EditableImage = ({ editable }) => {
       {editable ? (
         <Pressable
           style={styles.pressable}
-          onHoverIn={() => setIsHovered(true)}
-          onHoverOut={() => setIsHovered(false)}
+          onPressIn={() => setIsHovered(true)}
+          onPressOut={() => setIsHovered(false)}
           onPress={pickImage}
         >
           <ImageBackground style={styles.image} source={{ uri: recipe?.uri }}>
