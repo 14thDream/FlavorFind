@@ -1,9 +1,10 @@
 import { useContext } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { RecipeContext } from "../Contexts";
 import { spacing, fonts, colors } from "../styles";
 import { CommentButton, LikeButton } from "./Buttons";
 import EditableText from "./EditableText";
+import EditableImage from "./EditableImage";
 import SectionHeader from "./SectionHeader";
 import IngredientList from "./IngredientList";
 import StepList from "./StepList";
@@ -13,7 +14,7 @@ const RecipeDetails = ({ editable, onSave }) => {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={{ uri: recipe.uri }} />
+      <EditableImage editable={editable} />
       <View style={styles.buttons}>
         <LikeButton size={28} color="black" />
         <CommentButton size={28} color="black" />
@@ -54,12 +55,6 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     padding: spacing.sm,
     backgroundColor: colors.primary,
-    borderRadius: 10,
-  },
-  image: {
-    height: 269,
-    alignSelf: "stretch",
-    marginBottom: spacing.xs,
     borderRadius: 10,
   },
   buttons: {

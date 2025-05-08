@@ -26,7 +26,7 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [recipe, setRecipe] = useState(null);
   const [posts, setPosts] = useState([]);
-  
+
   const visiblePosts = useMemo(() => {
     return posts.filter(({ title }) => isSearchableBy(title, searchQuery));
   }, [posts, searchQuery]);
