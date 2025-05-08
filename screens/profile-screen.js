@@ -1,14 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
-import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Image } from "react-native";
-import { fonts } from "../styles"; // Ensure these are defined elsewhere
+import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Image, Alert } from "react-native";
 import { onValue } from "firebase/database";
 import { ref, db } from "../firebaseConfig";
 import RecipeFeed from "../components/RecipeFeed";
 import RecipeView from "../components/RecipeView";
 import { spacing, colors, fonts } from "../styles";
+import {  get, child } from "firebase/database";
 
-const DefaultProfileURL =
-  "https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
+
+import { useContext } from "react";
+import { UserContext } from "../Contexts";
+
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -24,10 +26,30 @@ const isSearchableBy = (title, keywords) => {
     .every((keyword) => containsKeyword(title, keyword));
 };
 
+const getDetails = () => {
+  const [userId] = useContext(UserContext);
+  const [username, setUsername] = useState('');
+
+
+  get(child(ref(db), `users/${userId}`)).then((snapshot) => {
+    if(snapshot.exists()){
+      setUsername(snapshot.val().username);
+    }
+  })
+  Alert.alert("Used the Debug Button! Username is:" + username);
+};
+    
+
+
 const ProfileScreen = () => {
+  const DefaultProfileURL ="https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRecipeId, setSelectedRecipeId] = useState(null);
   const [posts, setPosts] = useState([]);
+
+
+  
+
   const visiblePosts = useMemo(() => {
     return posts.filter(({ title }) => isSearchableBy(title, searchQuery));
   }, [posts, searchQuery]);
@@ -38,8 +60,13 @@ const ProfileScreen = () => {
       setPosts(posts);
     });
 
+
     return () => listener();
   }, []);
+
+  const debugDetails = () => {
+    Alert.alert("Used the Debug Button! Username is: " + username);
+  };
 
   return (
     <View style={styles.container}>
@@ -51,7 +78,7 @@ const ProfileScreen = () => {
           <Text style={styles.email}>caobreaded@gmail.com</Text>
           
           
-          <TouchableOpacity style={styles.signOutButton}>
+          <TouchableOpacity onPress={debugDetails} style={styles.signOutButton}>
             <Text style={styles.signOutText}>Sign Out</Text>
           </TouchableOpacity>
           
