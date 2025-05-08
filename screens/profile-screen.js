@@ -5,6 +5,7 @@ import { onValue } from "firebase/database";
 import { ref, db } from "../firebaseConfig";
 import RecipeFeed from "../components/RecipeFeed";
 import RecipeView from "../components/RecipeView";
+import { spacing, colors, fonts } from "../styles";
 
 const DefaultProfileURL =
   "https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
@@ -138,11 +139,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 4,
+    fontFamily: fonts.primary,
   },
   email: {
     fontSize: 14,
     color: "gray",
     marginBottom: 20,
+    fontFamily: fonts.primary,
   },
   signOutButton: {
     backgroundColor: "#D9D9D9",
