@@ -54,7 +54,6 @@ const Main = () => {
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="My Recipes" component={HomeScreen} />
         <Tab.Screen name="Create" component={CreateScreen} />
         <Tab.Screen name="Profile" component={HomeScreen} />
       </Tab.Navigator>
