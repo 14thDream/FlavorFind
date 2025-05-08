@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { RecipeContext } from "../Contexts";
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
+import { RecipeContext, UserContext } from "../Contexts";
 import { spacing, fonts, colors } from "../styles";
 import { CommentButton, LikeButton } from "./Buttons";
 import EditableText from "./EditableText";
@@ -8,9 +8,78 @@ import EditableImage from "./EditableImage";
 import SectionHeader from "./SectionHeader";
 import IngredientList from "./IngredientList";
 import StepList from "./StepList";
+import { ref, db, getNextId } from "../firebaseConfig";
+import { set } from "firebase/database";
 
 const RecipeDetails = ({ editable, onSave }) => {
   const [recipe, setRecipe] = useContext(RecipeContext);
+  const [userId, setUserId] = useContext(UserContext);
+
+  const uploadImage = async () => {
+    const cloudName = "djrpuf5yu";
+    const api = "https://api.cloudinary.com/v1_1/djrpuf5yu/image/upload";
+
+    const imageData = new FormData();
+    imageData.append("file", {
+      uri: recipe.uri,
+      type: "image/jpeg",
+      name: "upload.jpg",
+    }); // TODO: Parameters seem hardcoded?
+    imageData.append("upload_preset", "Flavorfind");
+    imageData.append("cloud_name", cloudName);
+
+    try {
+      const res = await fetch(api, {
+        method: "POST",
+        body: imageData,
+      });
+      const result = await res.json();
+
+      if (result.secure_url) {
+        Alert.alert("Upload Successful!");
+        setRecipe({ ...recipe, uri: result.secure_url });
+        return result.secure_url;
+      } else {
+        throw new Error("No secure URL in response");
+      }
+    } catch (err) {
+      console.error("Upload failed: ", err);
+    }
+  };
+
+  const saveRecipe = async () => {
+    const ingredientsValid = recipe.ingredients.every(
+      (ingredient) => ingredient.name.trim() && ingredient.amount.trim(),
+    );
+    const stepsValid = recipe.steps.every((step) => step.trim());
+
+    if (
+      !recipe.title.trim() ||
+      !recipe.description.trim() ||
+      !ingredientsValid ||
+      !stepsValid
+    ) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+
+    if (!recipe.uri) {
+      Alert.alert("Error", "Please select an image first");
+      return;
+    }
+
+    let recipeId = recipe.id;
+    let newRecipe = recipe;
+    if (!recipe.id) {
+      await uploadImage();
+      recipeId = await getNextId("posts");
+      newRecipe = { ...recipe, id: recipeId, userId: userId };
+    }
+
+    const recipesRef = ref(db, `posts/${recipeId}`);
+    set(recipesRef, newRecipe);
+    setRecipe(null);
+  };
 
   return (
     <View style={styles.container}>
@@ -31,7 +100,7 @@ const RecipeDetails = ({ editable, onSave }) => {
           isEditable={editable}
           placeholder="Add Description"
           style={styles.description}
-          value={recipe.description}
+          value={recipe?.description}
           onChangeText={(text) => setRecipe({ ...recipe, description: text })}
         />
       </View>
@@ -43,7 +112,7 @@ const RecipeDetails = ({ editable, onSave }) => {
         <SectionHeader text="STEPS" />
         <StepList editable={editable} />
       </View>
-      <TouchableOpacity style={styles.saveButton} onPress={onSave}>
+      <TouchableOpacity style={styles.saveButton} onPress={saveRecipe}>
         <Text style={styles.saveButtonText}>SAVE RECIPE</Text>
       </TouchableOpacity>
     </View>

@@ -37,8 +37,8 @@ const EditableImage = ({ editable }) => {
           onHoverIn={() => setIsHovered(true)}
           onHoverOut={() => setIsHovered(false)}
         >
-          <ImageBackground style={styles.image} source={{ uri: recipe.uri }}>
-            {isHovered || !recipe.uri ? (
+          <ImageBackground style={styles.image} source={{ uri: recipe?.uri }}>
+            {isHovered || !recipe?.uri ? (
               <View style={styles.whileHovered}>
                 <Text style={styles.whileHoverText}>Insert Picture</Text>
               </View>

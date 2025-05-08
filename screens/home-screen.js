@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import SearchHeader from "../components/SearchHeader.js";
 import RecipeFeed from "../components/RecipeFeed";
 import RecipeView from "../screens/view-recipe.js";
@@ -24,7 +24,7 @@ const isSearchableBy = (title, keywords) => {
 
 const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [recipe, setRecipe] = useState(null);
+  const [recipe, setRecipe] = useContext(RecipeContext);
   const [posts, setPosts] = useState([]);
 
   const visiblePosts = useMemo(() => {
@@ -50,9 +50,7 @@ const HomeScreen = () => {
           onPress={setRecipe}
         />
       ) : (
-        <RecipeContext.Provider value={[recipe, setRecipe]}>
-          <RecipeView isEditable />
-        </RecipeContext.Provider>
+        <RecipeView isEditable />
       )}
     </View>
   );

@@ -5,12 +5,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import HomeScreen from "./screens/home-screen";
 import LoginScreen from "./screens/login-screen";
 import RegisterScreen from "./screens/register-screen";
+import HomeScreen from "./screens/home-screen";
+import CreateScreen from "./screens/create-screen";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { UserContext } from "./Contexts";
+import { RecipeContext, UserContext } from "./Contexts";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,25 +39,29 @@ const App = () => {
 };
 
 const Main = () => {
+  const [recipe, setRecipe] = useState(null);
+
   return (
     <SafeAreaView style={styles.container}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarLabelStyle: { textTransform: "uppercase" },
-          tabBarIcon: ({ focused, size }) => {
-            const iconName = focused
-              ? routeIcons[route.name]
-              : `${routeIcons[route.name]}-outline`;
-            return <Ionicons name={iconName} size={size} color="black" />;
-          },
-        })}
-      >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="My Recipes" component={HomeScreen} />
-        <Tab.Screen name="Create" component={HomeScreen} />
-        <Tab.Screen name="Profile" component={HomeScreen} />
-      </Tab.Navigator>
+      <RecipeContext.Provider value={[recipe, setRecipe]}>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+            tabBarLabelStyle: { textTransform: "uppercase" },
+            tabBarIcon: ({ focused, size }) => {
+              const iconName = focused
+                ? routeIcons[route.name]
+                : `${routeIcons[route.name]}-outline`;
+              return <Ionicons name={iconName} size={size} color="black" />;
+            },
+          })}
+        >
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="My Recipes" component={HomeScreen} />
+          <Tab.Screen name="Create" component={CreateScreen} />
+          <Tab.Screen name="Profile" component={HomeScreen} />
+        </Tab.Navigator>
+      </RecipeContext.Provider>
     </SafeAreaView>
   );
 };

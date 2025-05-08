@@ -39,7 +39,7 @@ const StepList = ({ editable }) => {
 
   return (
     <View style={styles.container}>
-      {recipe.steps?.map((step, index) => (
+      {recipe?.steps?.map((step, index) => (
         <View key={index} style={styles.item}>
           <Text style={styles.indent}>{index + 1}.</Text>
           <EditableText
