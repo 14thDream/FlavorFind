@@ -238,7 +238,7 @@ const RecipeView = ({ id, editable, onClose }) => {
                 value={newStep}
                 onChangeText={setNewStep}
                 onBlur={addStep}
-                style={styles.listText}
+                style={styles.addListItem}
               />
             ) : null}
           </View>
@@ -325,6 +325,7 @@ const styles = StyleSheet.create({
   card: {
     alignSelf: "stretch",
     margin: spacing.sm,
+    padding: spacing.sm,
     backgroundColor: colors.primary,
     borderRadius: 10,
   },
@@ -332,18 +333,17 @@ const styles = StyleSheet.create({
     height: 269,
     alignSelf: "stretch",
     borderRadius: 10,
-    marginHorizontal: spacing.sm,
     marginTop: spacing.md,
     marginBottom: spacing.sm,
   },
   buttons: {
     flexDirection: "row",
-    marginHorizontal: spacing.sm + spacing.xs,
+    marginHorizontal: spacing.xs,
     marginBottom: spacing.sm + spacing.xs,
     gap: spacing.md + spacing.sm,
   },
   description: {
-    marginHorizontal: spacing.sm + spacing.xs,
+    marginHorizontal: spacing.xs,
     marginBottom: spacing.sm,
     fontFamily: fonts.primary,
     fontSize: fonts.md,
@@ -352,7 +352,6 @@ const styles = StyleSheet.create({
   sectionHeader: {
     marginTop: spacing.sm + spacing.xs,
     marginBottom: spacing.sm,
-    marginHorizontal: spacing.sm,
     paddingHorizontal: spacing.sm,
     backgroundColor: colors.highlight,
     borderRadius: 10,
@@ -383,7 +382,6 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   list: {
-    marginHorizontal: spacing.sm,
     marginBottom: spacing.sm,
     paddingHorizontal: spacing.xs,
     gap: spacing.xs,
@@ -394,11 +392,22 @@ const styles = StyleSheet.create({
     fontSize: fonts.md,
     fontWeight: "bold",
   },
+  addListItem: {
+    flex: 1,
+    marginTop: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    fontFamily: fonts.primary,
+    fontSize: fonts.md,
+    fontWeight: "bold",
+    backgroundColor: colors.highlight,
+    borderRadius: 20,
+  },  
   commentInput: {
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "stretch",
-    margin: spacing.sm,
+    marginVertical: spacing.sm,
     paddingLeft: spacing.sm,
     backgroundColor: colors.highlight,
     borderRadius: 20,
