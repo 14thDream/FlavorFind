@@ -15,7 +15,7 @@ import { db } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import SearchHeader from "../components/SearchHeader.js";
 import { spacing, colors, fonts } from "../styles";
-import { UserContext } from "../Contexts";
+import { RecipeContext, UserContext } from "../Contexts";
 
 import RecipeFeed from "../components/RecipeFeed";
 import RecipeView from "../screens/view-recipe.js";
@@ -38,7 +38,7 @@ const ProfileScreen = () => {
   const DefaultProfileURL =
     "https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRecipeId, setSelectedRecipeId] = useState(null);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -141,18 +141,20 @@ const ProfileScreen = () => {
 
         {/* Recipe Feed */}
         <View style={styles.container3}>
-          {selectedRecipeId === null ? (
+          {selectedRecipe === null ? (
             <RecipeFeed
               data={visiblePosts}
-              onPress={setSelectedRecipeId}
+              onPress={setSelectedRecipe}
               itemStyle={styles.feed} // Add spacing between recipes
             />
           ) : (
-            <RecipeView
-              editable
-              id={selectedRecipeId}
-              onClose={() => setSelectedRecipeId(null)}
-            />
+            <RecipeContext.Provider value={[selectedRecipe, setSelectedRecipe]}>
+              <RecipeView
+                editable
+                recipe={selectedRecipe}
+                onClose={() => setSelectedRecipe(null)}
+              />
+            </RecipeContext.Provider>
           )}
         </View>
       </ScrollView>
