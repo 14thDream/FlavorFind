@@ -144,6 +144,7 @@ const ProfileScreen = () => {
           {selectedRecipe === null ? (
             <RecipeFeed
               data={visiblePosts}
+              disableScroll={true}
               onPress={setSelectedRecipe}
               itemStyle={styles.feed} // Add spacing between recipes
             />

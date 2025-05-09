@@ -82,6 +82,7 @@ const CommentSection = () => {
       </View>
       <FlatList
         data={commentList}
+        scrollEnabled={false}
         keyExtractor={(comment) => comment.id}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
