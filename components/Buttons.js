@@ -1,9 +1,10 @@
-import { useState, useMemo, useContext, useEffect } from "react";
+import { useState, useMemo, useContext, useEffect, useCallback } from "react";
 import { View, Pressable } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { UserContext } from "../Contexts";
 import { ref, db } from "../firebaseConfig";
 import { get, set } from "firebase/database";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const LikeButton = ({ size, path }) => {
   const [userId, setUserId] = useContext(UserContext);
@@ -18,16 +19,18 @@ export const LikeButton = ({ size, path }) => {
     setIsLiked(!isLiked);
   };
 
-  useEffect(() => {
-    const fetchLikes = async () => {
-      const likedByRef = ref(db, `${path}/likedBy`);
-      const snapshot = await get(likedByRef);
-      const isLiked = snapshot.exists() && snapshot.val()[userId];
-      setIsLiked(isLiked);
-    };
+  const fetchLikes = async () => {
+    const likedByRef = ref(db, `${path}/likedBy`);
+    const snapshot = await get(likedByRef);
+    const isLiked = snapshot.exists() && snapshot.val()[userId];
+    setIsLiked(isLiked);
+  };
 
+  useEffect(() => {
     fetchLikes();
   }, [path]);
+
+  useFocusEffect(useCallback(fetchLikes, [path]));
 
   return (
     <View>
