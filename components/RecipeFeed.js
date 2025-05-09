@@ -12,7 +12,7 @@ const RecipeFeed = ({
     return (
       <View style={itemStyle}>
         <RecipePost
-          scrollEnabled={!disableScroll}
+          scrollEnabled={disableScroll ? false : true}
           recipe={item}
           onPress={() => onPress(item)}
           onCommentPress={() => {
