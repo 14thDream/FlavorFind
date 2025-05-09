@@ -19,16 +19,20 @@ const RecipeView = ({ isEditable, scrollToComments, afterScroll }) => {
 
     const likesRef = child(recipeRef, "likedBy");
     const snapshotLikes = await get(likesRef);
-    const likes = Object.keys(snapshotLikes.val());
 
-    const userRef = ref(db, "users");
-    const snapshotUsers = await get(userRef);
-    likes.forEach((id) => {
-      const likeRef = child(userRef, `${id}/likes/posts/${recipe.id}`);
-      set(likeRef, null);
-    });
+    if (snapshotLikes.exists()) {
+      const likes = Object.keys(snapshotLikes.val());
+
+      const userRef = ref(db, "users");
+      const snapshotUsers = await get(userRef);
+      likes.forEach((id) => {
+        const likeRef = child(userRef, `${id}/likes/posts/${recipe.id}`);
+        set(likeRef, null);
+      });
+    }
 
     set(recipeRef, null);
+    setRecipe(null);
   };
 
   useEffect(() => {
