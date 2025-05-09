@@ -8,13 +8,18 @@ import {
   Image,
   Alert,
 } from "react-native";
+
 import { onValue, get, child, ref } from "firebase/database";
 import { db } from "../firebaseConfig";
-import RecipeFeed from "../components/RecipeFeed";
+
 import { useNavigation } from "@react-navigation/native";
 import SearchHeader from "../components/SearchHeader.js"; 
 import { spacing, colors, fonts } from "../styles";
 import { UserContext } from "../Contexts";
+
+
+import RecipeFeed from "../components/RecipeFeed";
+import RecipeView from "../screens/view-recipe.js";
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -96,28 +101,22 @@ const ProfileScreen = () => {
         </View>
 
 
-
-
         <View style={styles.buttonBarContainer}>
-          <TouchableOpacity style={styles.containerButtons} onPress={() => setViewMode("my")}>
-            <Text style={styles.signOutText}>MY RECIPES</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={[styles.containerButtons, viewMode === "my" && styles.activeButton]} onPress={() => setViewMode("my")}>
+          <Text style={[styles.signOutText,viewMode === "my" && styles.activeButtonText]}>MY RECIPES</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity style={styles.containerButtons} onPress={() => setViewMode("all")}>
-            <Text style={styles.signOutText}>FAVORITES</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={[styles.containerButtons, viewMode === "all" && styles.activeButton]} onPress={() => setViewMode("all")}>
+          <Text style={[ styles.signOutText, viewMode === "all" && styles.activeButtonText ]}> FAVORITES </Text>
+        </TouchableOpacity>
         </View>
 
 
 
         {/* Recipe Feed */}
         <View style={styles.container3}>
-          {selectedRecipeId === null ? (
-            <RecipeFeed
-              data={visiblePosts}
-              onPress={setSelectedRecipeId}
-              itemStyle={styles.feed} // Add spacing between recipes
-            />
+          {selectedRecipeId === null ? ( <RecipeFeed data={visiblePosts} onPress={setSelectedRecipeId} itemStyle={styles.feed} // Add spacing between recipes 
+          />
           ) : (
             <RecipeView
               editable
@@ -200,6 +199,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 35,
     borderRadius: 10,
   },
+  activeButton: {
+    backgroundColor: "#FFD966", // Yellow background when active
+  },
   signOutText: {
     fontSize: 16,
     fontFamily: fonts?.body || "System",
@@ -208,5 +210,4 @@ const styles = StyleSheet.create({
     marginBottom: 10, //spacing for each recipe
   },
 });
-
 export default ProfileScreen;
