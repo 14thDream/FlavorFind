@@ -5,7 +5,7 @@ import { colors, fonts, spacing } from "../styles";
 import { ref, db } from "../firebaseConfig";
 import { get } from "firebase/database";
 
-const RecipePost = ({ recipe, onPress }) => {
+const RecipePost = ({ recipe, onPress, onCommentPress }) => {
   const [username, setUsername] = useState("");
   useEffect(() => {
     const fetchUsername = async (id) => {
@@ -24,7 +24,7 @@ const RecipePost = ({ recipe, onPress }) => {
       <Image style={styles.image} source={{ uri: recipe.uri }} />
       <View style={styles.bar}>
         <LikeButton size={24} path={`posts/${recipe.id}`} />
-        <CommentButton size={24} color="black" />
+        <CommentButton size={24} color="black" onPress={onCommentPress} />
       </View>
     </Pressable>
   );

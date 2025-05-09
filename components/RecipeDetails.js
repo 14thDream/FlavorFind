@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
-import { RecipeContext, UserContext } from "../Contexts";
+import { RecipeContext, ScrollEffectContext, UserContext } from "../Contexts";
 import { spacing, fonts, colors } from "../styles";
 import { CommentButton, LikeButton } from "./Buttons";
 import EditableText from "./EditableText";
@@ -14,6 +14,7 @@ import { set } from "firebase/database";
 const RecipeDetails = ({ editable, onSave }) => {
   const [recipe, setRecipe] = useContext(RecipeContext);
   const [userId, setUserId] = useContext(UserContext);
+  const { scrollRef, targetCoordinates } = useContext(ScrollEffectContext);
 
   const uploadImage = async () => {
     const cloudName = "djrpuf5yu";
@@ -87,7 +88,13 @@ const RecipeDetails = ({ editable, onSave }) => {
       {recipe && (
         <View style={styles.buttons}>
           <LikeButton size={28} path={`posts/${recipe.id}`} />
-          <CommentButton size={28} color="black" />
+          <CommentButton
+            size={28}
+            color="black"
+            onPress={() => {
+              scrollRef.current?.scrollTo(targetCoordinates);
+            }}
+          />
         </View>
       )}
       <View

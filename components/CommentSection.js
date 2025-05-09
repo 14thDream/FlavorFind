@@ -1,9 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { FlatList, StyleSheet, TextInput, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, spacing, fonts } from "../styles";
 import { IconButton } from "./Buttons";
-import { RecipeContext, UserContext } from "../Contexts";
+import { RecipeContext, ScrollEffectContext, UserContext } from "../Contexts";
 import { ref, db, getNextId } from "../firebaseConfig";
 import { onValue, set } from "firebase/database";
 import Comment from "./Comment";
@@ -14,6 +20,9 @@ const CommentSection = () => {
 
   const [commentList, setCommentList] = useState({});
   const [comment, setComment] = useState("");
+
+  const commentRef = useRef(null);
+  const { setTargetCoordinates } = useContext(ScrollEffectContext);
 
   const sendComment = async () => {
     if (!comment.trim()) {
@@ -44,8 +53,14 @@ const CommentSection = () => {
     return () => listener();
   }, [recipe]);
 
+  useLayoutEffect(() => {
+    commentRef.current?.measure((x, y, width, height, pageX, pageY) => {
+      setTargetCoordinates({ x: x, y: y });
+    });
+  }, [commentList]);
+
   return (
-    <View style={styles.container}>
+    <View ref={commentRef} style={styles.container}>
       <View style={styles.input}>
         <TextInput
           multiline

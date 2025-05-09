@@ -27,6 +27,7 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [recipe, setRecipe] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [scrollToComments, setScrollToComments] = useState(false);
 
   const visiblePosts = useMemo(() => {
     return posts.filter(({ title }) => isSearchableBy(title, searchQuery));
@@ -49,10 +50,14 @@ const HomeScreen = () => {
           itemStyle={styles.feed}
           data={visiblePosts}
           onPress={setRecipe}
+          onCommentPress={() => setScrollToComments(true)}
         />
       ) : (
         <RecipeContext.Provider value={[recipe, setRecipe]}>
-          <RecipeView />
+          <RecipeView
+            scrollToComments={scrollToComments}
+            afterScroll={() => setScrollToComments(false)}
+          />
         </RecipeContext.Provider>
       )}
     </View>

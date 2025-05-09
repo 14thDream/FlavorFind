@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 import LoginScreen from "./screens/login-screen";
 import RegisterScreen from "./screens/register-screen";
@@ -24,6 +24,16 @@ const routeIcons = {
 };
 
 const App = () => {
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <Screens />
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
+};
+
+const Screens = () => {
   const [userId, setUserId] = useState(null);
 
   return (
@@ -33,7 +43,7 @@ const App = () => {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Main" component={Main} />
-          <Stack.Screen name="Profile" component={ProfileScreen}/>
+          <Stack.Screen name="Profile" component={ProfileScreen} />
         </Stack.Navigator>
       </UserContext.Provider>
     </NavigationContainer>
@@ -42,24 +52,22 @@ const App = () => {
 
 const Main = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarLabelStyle: { textTransform: "uppercase" },
-          tabBarIcon: ({ focused, size }) => {
-            const iconName = focused
-              ? routeIcons[route.name]
-              : `${routeIcons[route.name]}-outline`;
-            return <Ionicons name={iconName} size={size} color="black" />;
-          },
-        })}
-      >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Create" component={CreateScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-      </Tab.Navigator>
-    </SafeAreaView>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarLabelStyle: { textTransform: "uppercase" },
+        tabBarIcon: ({ focused, size }) => {
+          const iconName = focused
+            ? routeIcons[route.name]
+            : `${routeIcons[route.name]}-outline`;
+          return <Ionicons name={iconName} size={size} color="black" />;
+        },
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Create" component={CreateScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
   );
 };
 

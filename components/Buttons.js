@@ -1,4 +1,4 @@
-import { useState, useMemo, useContext, useEffect, useCallback } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { View, Pressable } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { UserContext } from "../Contexts";
@@ -45,10 +45,12 @@ export const LikeButton = ({ size, path }) => {
   );
 };
 
-export const CommentButton = ({ size, color }) => {
+export const CommentButton = ({ size, color, onPress }) => {
   return (
     <View>
-      <FontAwesome name="comment-o" size={size} color={color} />
+      <Pressable onPress={onPress}>
+        <FontAwesome name="comment-o" size={size} color={color} />
+      </Pressable>
     </View>
   );
 };

@@ -1,11 +1,18 @@
 import { View, FlatList } from "react-native";
 import RecipePost from "./RecipePost";
 
-const RecipeFeed = ({ itemStyle, data, onPress }) => {
+const RecipeFeed = ({ itemStyle, data, onPress, onCommentPress }) => {
   const renderItem = ({ item }) => {
     return (
       <View style={itemStyle}>
-        <RecipePost recipe={item} onPress={() => onPress(item)} />
+        <RecipePost
+          recipe={item}
+          onPress={() => onPress(item)}
+          onCommentPress={() => {
+            onPress(item);
+            onCommentPress();
+          }}
+        />
       </View>
     );
   };
