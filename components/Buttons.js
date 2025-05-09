@@ -18,12 +18,15 @@ export const LikeButton = ({ size, path }) => {
     setIsLiked(!isLiked);
   };
 
-  useEffect(async () => {
-    const likedByRef = ref(db, `${path}/likedBy`);
-    const snapshot = await get(likedByRef);
+  useEffect(() => {
+    const fetchLikes = async () => {
+      const likedByRef = ref(db, `${path}/likedBy`);
+      const snapshot = await get(likedByRef);
+      const isLiked = snapshot.exists() && snapshot.val()[userId];
+      setIsLiked(isLiked);
+    };
 
-    const isLiked = snapshot.exists() && snapshot.val()[userId];
-    setIsLiked(isLiked);
+    fetchLikes();
   }, [path]);
 
   return (
