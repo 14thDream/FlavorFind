@@ -52,7 +52,8 @@ const LoginScreen = () => {
       setUserId(foundUser.id);
 
       Alert.alert(
-        "Login successful, Welcome back, " + foundUser.username + "!",
+        "Login Successful!",
+        "Welcome Back, " + foundUser.username + "!",
       );
       navigator.navigate("Main");
     } else {
@@ -61,6 +62,8 @@ const LoginScreen = () => {
       );
     }
   };
+
+  
 
   useEffect(() => {
     if (loaded || error) {
@@ -72,7 +75,11 @@ const LoginScreen = () => {
     return null;
   }
 
+
+
   const Background = require("../assets/images/authentication-background.jpg");
+
+
 
   return (
     <View style={styles.container}>
@@ -116,6 +123,9 @@ const LoginScreen = () => {
     </View>
   );
 };
+
+
+
 
 const styles = StyleSheet.create({
   container: {
