@@ -1,14 +1,18 @@
-import { useState, useEffect, useMemo } from "react";
-import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Image, Alert } from "react-native";
-import { onValue } from "firebase/database";
-import { ref, db } from "../firebaseConfig";
+import { useState, useEffect, useMemo, useContext } from "react";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
+import { onValue, get, child, ref } from "firebase/database";
+import { db } from "../firebaseConfig";
 import RecipeFeed from "../components/RecipeFeed";
 import { useNavigation } from "@react-navigation/native";
 import { spacing, colors, fonts } from "../styles";
-import {  get, child } from "firebase/database";
-
-
-import { useContext } from "react";
 import { UserContext } from "../Contexts";
 
 const containsKeyword = (title, keyword) => {
@@ -25,21 +29,6 @@ const isSearchableBy = (title, keywords) => {
     .every((keyword) => containsKeyword(title, keyword));
 };
 
-const getDetails = () => {
-  const [userId] = useContext(UserContext);
-  const [username, setUsername] = useState('');
-
-
-  get(child(ref(db), `users/${userId}`)).then((snapshot) => {
-    if(snapshot.exists()){
-      setUsername(snapshot.val().username);
-    }
-  })
-  Alert.alert("Used the Debug Button! Username is:" + username);
-};
-    
-
-
 const ProfileScreen = () => {
   const DefaultProfileURL = "https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,7 +37,6 @@ const ProfileScreen = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
-  
   const [userId] = useContext(UserContext); // ✅ This gives you the current user's UID
   const navigator = useNavigation();
 
@@ -59,7 +47,7 @@ const ProfileScreen = () => {
         if (snapshot.exists()) {
           const data = snapshot.val();
           setUsername(data.username);
-          setEmail(data.email); 
+          setEmail(data.email);
         }
       } catch (error) {
         console.error("Failed to fetch user details:", error);
@@ -82,24 +70,25 @@ const ProfileScreen = () => {
     return () => listener();
   }, []);
 
-
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+        
+        
+        
         {/* Profile Card */}
         <View style={styles.profileCard}>
           <Image source={{ uri: DefaultProfileURL }} style={styles.profileImage} />
           <Text style={styles.username}>@{username || "Loading..."}</Text>
           <Text style={styles.email}>{email || "Loading..."}</Text>
 
-          
           <TouchableOpacity onPress={() => navigator.navigate("Login")} style={styles.signOutButton}>
             <Text style={styles.signOutText}>Sign Out</Text>
           </TouchableOpacity>
-
-          
-
         </View>
+
+
+
 
         <View style={styles.buttonBarContainer}>
           <TouchableOpacity style={styles.containerButtons}>
@@ -111,12 +100,17 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         </View>
 
+
+
+
         {/* Recipe Feed */}
-
-
         <View style={styles.container3}>
           {selectedRecipeId === null ? (
-            <RecipeFeed data={visiblePosts} onPress={setSelectedRecipeId} />
+            <RecipeFeed
+              data={visiblePosts}
+              onPress={setSelectedRecipeId}
+              itemStyle={styles.feed} // Add spacing between recipes
+            />
           ) : (
             <RecipeView
               editable
@@ -136,7 +130,7 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFD966", // yellow background
+    backgroundColor: "#FFD966", 
   },
   scrollContainer: {
     alignItems: "center",
@@ -162,13 +156,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 10,
   },
-  container2: {
-    width: "95%",  // Make this the same as the profile card
-    marginBottom: 20,
-  },
   container3: {
-    width: "100%",  // Make this the same as the profile card
+    width: "100%",
     marginBottom: 20,
+    paddingHorizontal: 10, // Optional, for inner spacing if needed
   },
   profileImage: {
     width: 165,
@@ -196,15 +187,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 100,
     borderRadius: 10,
   },
-  containerButtons:{
-      backgroundColor: "#D9D9D9",
-      paddingVertical: 10,
-      paddingHorizontal: 35,
-      borderRadius: 10,
+  containerButtons: {
+    backgroundColor: "#D9D9D9",
+    paddingVertical: 10,
+    paddingHorizontal: 35,
+    borderRadius: 10,
   },
   signOutText: {
     fontSize: 16,
     fontFamily: fonts?.body || "System",
+  },
+  feed: {
+    marginBottom: 10, //spacing for each recipe
   },
 });
 
