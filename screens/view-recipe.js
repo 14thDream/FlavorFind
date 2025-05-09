@@ -3,6 +3,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import RecipeNavigationHeader from "../components/RecipeNavigationHeader";
 import RecipeDetails from "../components/RecipeDetails";
 import { spacing } from "../styles";
+import CommentSection from "../components/CommentSection";
 
 const RecipeView = ({ isEditable }) => {
   const [editable, setEditable] = useState(isEditable);
@@ -18,6 +19,7 @@ const RecipeView = ({ isEditable }) => {
           <RecipeNavigationHeader editable={editable} onEdit={setEditable} />
         </View>
         <RecipeDetails editable={editable} />
+        <CommentSection />
       </ScrollView>
     </View>
   );
