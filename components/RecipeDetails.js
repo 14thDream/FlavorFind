@@ -14,7 +14,8 @@ import { set } from "firebase/database";
 const RecipeDetails = ({ editable, onSave }) => {
   const [recipe, setRecipe] = useContext(RecipeContext);
   const [userId, setUserId] = useContext(UserContext);
-  const { scrollRef, targetCoordinates } = useContext(ScrollEffectContext);
+  const { scrollRef, targetCoordinates } =
+    useContext(ScrollEffectContext) || {};
 
   const uploadImage = async () => {
     const cloudName = "djrpuf5yu";
@@ -85,9 +86,9 @@ const RecipeDetails = ({ editable, onSave }) => {
   return (
     <View style={styles.container}>
       <EditableImage editable={editable} />
-      {recipe && (
-        <View style={styles.buttons}>
-          <LikeButton size={28} path={`posts/${recipe.id}`} />
+      <View style={styles.buttons}>
+        {recipe && <LikeButton size={28} path={`posts/${recipe.id}`} />}
+        {recipe && (
           <CommentButton
             size={28}
             color="black"
@@ -95,8 +96,8 @@ const RecipeDetails = ({ editable, onSave }) => {
               scrollRef.current?.scrollTo(targetCoordinates);
             }}
           />
-        </View>
-      )}
+        )}
+      </View>
       <View
         style={[
           { marginBottom: spacing.sm },
