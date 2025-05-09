@@ -84,10 +84,12 @@ const RecipeDetails = ({ editable, onSave }) => {
   return (
     <View style={styles.container}>
       <EditableImage editable={editable} />
-      <View style={styles.buttons}>
-        <LikeButton size={28} path={`posts/${recipe.id}`} />
-        <CommentButton size={28} color="black" />
-      </View>
+      {recipe && (
+        <View style={styles.buttons}>
+          <LikeButton size={28} path={`posts/${recipe.id}`} />
+          <CommentButton size={28} color="black" />
+        </View>
+      )}
       <View
         style={[
           { marginBottom: spacing.sm },
