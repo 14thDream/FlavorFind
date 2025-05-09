@@ -13,10 +13,9 @@ import { onValue, get, child, ref } from "firebase/database";
 import { db } from "../firebaseConfig";
 
 import { useNavigation } from "@react-navigation/native";
-import SearchHeader from "../components/SearchHeader.js"; 
+import SearchHeader from "../components/SearchHeader.js";
 import { spacing, colors, fonts } from "../styles";
 import { UserContext } from "../Contexts";
-
 
 import RecipeFeed from "../components/RecipeFeed";
 import RecipeView from "../screens/view-recipe.js";
@@ -36,14 +35,14 @@ const isSearchableBy = (title, keywords) => {
 };
 
 const ProfileScreen = () => {
-  const DefaultProfileURL = "https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
+  const DefaultProfileURL =
+    "https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRecipeId, setSelectedRecipeId] = useState(null);
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [viewMode, setViewMode] = useState("my"); // "my" or "all"
-
 
   const [userId] = useContext(UserContext); // ✅ This gives you the current user's UID
   const navigator = useNavigation();
@@ -64,26 +63,23 @@ const ProfileScreen = () => {
 
     fetchUserDetails();
   }, [userId]);
-  
-
 
   useEffect(() => {
     const listener = onValue(ref(db, "posts"), (snapshot) => {
       const data = snapshot.val();
       setPosts(data ? Object.values(data) : []);
     });
-  
-    return () => listener();
-    }, []);
-  
 
-    
+    return () => listener();
+  }, []);
+
   const visiblePosts = useMemo(() => {
-    const filtered = viewMode === "my" ? posts.filter((post) => post.userId === userId) : posts;
+    const filtered =
+      viewMode === "my"
+        ? posts.filter((post) => post.userId === userId)
+        : posts.filter((post) => post.likedBy?.[userId]);
     return filtered.filter(({ title }) => isSearchableBy(title, searchQuery));
   }, [posts, searchQuery, viewMode, userId]);
-
-
 
   return (
     <View style={styles.container}>
@@ -91,32 +87,66 @@ const ProfileScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Profile Card */}
         <View style={styles.profileCard}>
-          <Image source={{ uri: DefaultProfileURL }} style={styles.profileImage} />
+          <Image
+            source={{ uri: DefaultProfileURL }}
+            style={styles.profileImage}
+          />
           <Text style={styles.username}>@{username || "Loading..."}</Text>
           <Text style={styles.email}>{email || "Loading..."}</Text>
 
-          <TouchableOpacity onPress={() => navigator.navigate("Login")} style={styles.signOutButton}>
+          <TouchableOpacity
+            onPress={() => navigator.navigate("Login")}
+            style={styles.signOutButton}
+          >
             <Text style={styles.signOutText}>Sign Out</Text>
           </TouchableOpacity>
         </View>
 
-
         <View style={styles.buttonBarContainer}>
-        <TouchableOpacity style={[styles.containerButtons, viewMode === "my" && styles.activeButton]} onPress={() => setViewMode("my")}>
-          <Text style={[styles.signOutText,viewMode === "my" && styles.activeButtonText]}>MY RECIPES</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.containerButtons,
+              viewMode === "my" && styles.activeButton,
+            ]}
+            onPress={() => setViewMode("my")}
+          >
+            <Text
+              style={[
+                styles.signOutText,
+                viewMode === "my" && styles.activeButtonText,
+              ]}
+            >
+              MY RECIPES
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.containerButtons, viewMode === "all" && styles.activeButton]} onPress={() => setViewMode("all")}>
-          <Text style={[ styles.signOutText, viewMode === "all" && styles.activeButtonText ]}> FAVORITES </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.containerButtons,
+              viewMode === "all" && styles.activeButton,
+            ]}
+            onPress={() => setViewMode("all")}
+          >
+            <Text
+              style={[
+                styles.signOutText,
+                viewMode === "all" && styles.activeButtonText,
+              ]}
+            >
+              {" "}
+              FAVORITES{" "}
+            </Text>
+          </TouchableOpacity>
         </View>
-
-
 
         {/* Recipe Feed */}
         <View style={styles.container3}>
-          {selectedRecipeId === null ? ( <RecipeFeed data={visiblePosts} onPress={setSelectedRecipeId} itemStyle={styles.feed} // Add spacing between recipes 
-          />
+          {selectedRecipeId === null ? (
+            <RecipeFeed
+              data={visiblePosts}
+              onPress={setSelectedRecipeId}
+              itemStyle={styles.feed} // Add spacing between recipes
+            />
           ) : (
             <RecipeView
               editable
@@ -125,9 +155,6 @@ const ProfileScreen = () => {
             />
           )}
         </View>
-
-
-        
       </ScrollView>
     </View>
   );
@@ -136,7 +163,7 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFD966", 
+    backgroundColor: "#FFD966",
   },
   scrollContainer: {
     alignItems: "center",
