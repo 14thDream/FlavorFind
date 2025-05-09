@@ -4,7 +4,7 @@ import RecipePost from "./RecipePost";
 const RecipeFeed = ({
   itemStyle,
   data,
-  disableScroll,
+  scrollEnabled = true,
   onPress,
   onCommentPress,
 }) => {
@@ -12,7 +12,6 @@ const RecipeFeed = ({
     return (
       <View style={itemStyle}>
         <RecipePost
-          scrollEnabled={disableScroll ? false : true}
           recipe={item}
           onPress={() => onPress(item)}
           onCommentPress={() => {
@@ -27,6 +26,7 @@ const RecipeFeed = ({
   return (
     <FlatList
       showsVerticalScrollIndicator={false}
+      scrollEnabled={scrollEnabled}
       data={data}
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
