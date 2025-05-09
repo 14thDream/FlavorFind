@@ -58,7 +58,8 @@ const LoginScreen = () => {
       navigator.navigate("Main");
     } else {
       Alert.alert(
-        "Login failed, Incorrect password or Email. Please try again.",
+        "Login failed!",
+        "Incorrect password or Email. Please try again.",
       );
     }
   };

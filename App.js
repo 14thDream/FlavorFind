@@ -9,6 +9,7 @@ import LoginScreen from "./screens/login-screen";
 import RegisterScreen from "./screens/register-screen";
 import HomeScreen from "./screens/home-screen";
 import CreateScreen from "./screens/create-screen";
+import ProfileScreen from "./screens/profile-screen";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { UserContext } from "./Contexts";
@@ -32,6 +33,7 @@ const App = () => {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Main" component={Main} />
+          <Stack.Screen name="Profile" component={ProfileScreen}/>
         </Stack.Navigator>
       </UserContext.Provider>
     </NavigationContainer>
@@ -55,7 +57,7 @@ const Main = () => {
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Create" component={CreateScreen} />
-        <Tab.Screen name="Profile" component={HomeScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </SafeAreaView>
   );
