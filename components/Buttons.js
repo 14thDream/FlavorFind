@@ -30,7 +30,7 @@ export const LikeButton = ({ size, path }) => {
     fetchLikes();
   }, [path]);
 
-  useFocusEffect(useCallback(fetchLikes, [path]));
+  useFocusEffect(useCallback(() => fetchLikes(), [path]));
 
   return (
     <View>
