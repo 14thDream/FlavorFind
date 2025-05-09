@@ -8,7 +8,7 @@ import { spacing, fonts, colors } from "../styles";
 import { ref, db } from "../firebaseConfig";
 import { get } from "firebase/database";
 
-const RecipeNavigationHeader = ({ editable, onEdit }) => {
+const RecipeNavigationHeader = ({ editable, onEdit, onDelete }) => {
   const [recipe, setRecipe] = useContext(RecipeContext);
   const [userId, setUserId] = useContext(UserContext);
   const [username, setUsername] = useState("");
@@ -51,14 +51,22 @@ const RecipeNavigationHeader = ({ editable, onEdit }) => {
         />
       </View>
       {recipe?.userId === userId && (
-        <IconButton
-          Icon={Ionicons}
-          name={editable ? "checkmark" : "pencil"}
-          size={28}
-          color={editable ? "green" : "red"}
-          style={styles.editButton}
-          onPress={() => onEdit(!editable)}
-        />
+        <View style={styles.ownedRecipeButtons}>
+          <IconButton
+            Icon={Ionicons}
+            name={editable ? "checkmark" : "pencil"}
+            size={28}
+            color={editable ? "green" : "red"}
+            onPress={() => onEdit(!editable)}
+          />
+          <IconButton
+            Icon={Ionicons}
+            name="trash"
+            size={28}
+            color="red"
+            onPress={onDelete}
+          />
+        </View>
       )}
     </View>
   );
@@ -89,8 +97,10 @@ const styles = StyleSheet.create({
   backButton: {
     marginRight: spacing.xs,
   },
-  editButton: {
+  ownedRecipeButtons: {
+    flexDirection: "row",
     alignSelf: "flex-end",
+    gap: spacing.sm,
   },
 });
 

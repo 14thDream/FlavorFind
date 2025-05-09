@@ -1,15 +1,35 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import RecipeNavigationHeader from "../components/RecipeNavigationHeader";
 import RecipeDetails from "../components/RecipeDetails";
 import { spacing } from "../styles";
 import CommentSection from "../components/CommentSection";
-import { ScrollEffectContext } from "../Contexts";
+import { RecipeContext, ScrollEffectContext } from "../Contexts";
+import { ref, db } from "../firebaseConfig";
+import { child, get, set } from "firebase/database";
 
 const RecipeView = ({ isEditable, scrollToComments, afterScroll }) => {
+  const [recipe, setRecipe] = useContext(RecipeContext);
   const [editable, setEditable] = useState(isEditable);
   const scrollRef = useRef(null);
   const [targetCoordinates, setTargetCoordinates] = useState(null);
+
+  const deleteRecipe = async () => {
+    const recipeRef = ref(db, `posts/${recipe.id}`);
+
+    const likesRef = child(recipeRef, "likedBy");
+    const snapshotLikes = await get(likesRef);
+    const likes = Object.keys(snapshotLikes.val());
+
+    const userRef = ref(db, "users");
+    const snapshotUsers = await get(userRef);
+    likes.forEach((id) => {
+      const likeRef = child(userRef, `${id}/likes/posts/${recipe.id}`);
+      set(likeRef, null);
+    });
+
+    set(recipeRef, null);
+  };
 
   useEffect(() => {
     if (!scrollToComments || !scrollRef || !targetCoordinates) {
@@ -36,7 +56,11 @@ const RecipeView = ({ isEditable, scrollToComments, afterScroll }) => {
           stickyHeaderIndices={[0]}
         >
           <View style={styles.header}>
-            <RecipeNavigationHeader editable={editable} onEdit={setEditable} />
+            <RecipeNavigationHeader
+              editable={editable}
+              onEdit={setEditable}
+              onDelete={deleteRecipe}
+            />
           </View>
           <RecipeDetails editable={editable} />
           <CommentSection />
