@@ -3,14 +3,13 @@ import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Image, Alert } fr
 import { onValue } from "firebase/database";
 import { ref, db } from "../firebaseConfig";
 import RecipeFeed from "../components/RecipeFeed";
-
+import { useNavigation } from "@react-navigation/native";
 import { spacing, colors, fonts } from "../styles";
 import {  get, child } from "firebase/database";
 
 
 import { useContext } from "react";
 import { UserContext } from "../Contexts";
-
 
 const containsKeyword = (title, keyword) => {
   return title
@@ -42,13 +41,33 @@ const getDetails = () => {
 
 
 const ProfileScreen = () => {
-  const DefaultProfileURL ="https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
+  const DefaultProfileURL = "https://res.cloudinary.com/djrpuf5yu/image/upload/v1746711602/28-05_uaqupm.jpg";
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRecipeId, setSelectedRecipeId] = useState(null);
   const [posts, setPosts] = useState([]);
-
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
 
   
+  const [userId] = useContext(UserContext); // ✅ This gives you the current user's UID
+  const navigator = useNavigation();
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const snapshot = await get(child(ref(db), `users/${userId}`));
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          setUsername(data.username);
+          setEmail(data.email); 
+        }
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, [userId]);
 
   const visiblePosts = useMemo(() => {
     return posts.filter(({ title }) => isSearchableBy(title, searchQuery));
@@ -60,13 +79,9 @@ const ProfileScreen = () => {
       setPosts(posts);
     });
 
-
     return () => listener();
   }, []);
 
-  const debugDetails = () => {
-    Alert.alert("Used the Debug Button! Username is: " + username);
-  };
 
   return (
     <View style={styles.container}>
@@ -74,13 +89,14 @@ const ProfileScreen = () => {
         {/* Profile Card */}
         <View style={styles.profileCard}>
           <Image source={{ uri: DefaultProfileURL }} style={styles.profileImage} />
-          <Text style={styles.username}>@CaoBreaded</Text>
-          <Text style={styles.email}>caobreaded@gmail.com</Text>
+          <Text style={styles.username}>@{username || "Loading..."}</Text>
+          <Text style={styles.email}>{email || "Loading..."}</Text>
+
           
-          
-          <TouchableOpacity onPress={debugDetails} style={styles.signOutButton}>
+          <TouchableOpacity onPress={() => navigator.navigate("Login")} style={styles.signOutButton}>
             <Text style={styles.signOutText}>Sign Out</Text>
           </TouchableOpacity>
+
           
 
         </View>
