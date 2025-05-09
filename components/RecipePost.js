@@ -1,13 +1,11 @@
+import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { CommentButton, LikeButton } from "./Buttons";
-
 import { colors, fonts, spacing } from "../styles";
-import { useEffect, useState } from "react";
-
 import { ref, db } from "../firebaseConfig";
 import { get } from "firebase/database";
 
-const RecipePost = ({ userId, title, uri, onPress }) => {
+const RecipePost = ({ recipe, onPress }) => {
   const [username, setUsername] = useState("");
   useEffect(() => {
     const fetchUsername = async (id) => {
@@ -16,16 +14,16 @@ const RecipePost = ({ userId, title, uri, onPress }) => {
       setUsername(user.val().username);
     };
 
-    fetchUsername(userId);
-  }, [userId]);
+    fetchUsername(recipe.userId);
+  }, [recipe.userId]);
 
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <Text style={[styles.text, styles.usernameText]}>@{username}</Text>
-      <Text style={[styles.text, styles.titleText]}>{title}</Text>
-      <Image style={styles.image} source={{ uri: uri }} />
+      <Text style={[styles.text, styles.titleText]}>{recipe.title}</Text>
+      <Image style={styles.image} source={{ uri: recipe.uri }} />
       <View style={styles.bar}>
-        <LikeButton size={24} color="black" />
+        <LikeButton size={24} path={`posts/${recipe.id}`} />
         <CommentButton size={24} color="black" />
       </View>
     </Pressable>

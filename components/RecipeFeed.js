@@ -5,12 +5,7 @@ const RecipeFeed = ({ itemStyle, data, onPress }) => {
   const renderItem = ({ item }) => {
     return (
       <View style={itemStyle}>
-        <RecipePost
-          userId={item.userId}
-          title={item.title}
-          uri={item.uri}
-          onPress={() => onPress(item)}
-        />
+        <RecipePost recipe={item} onPress={() => onPress(item)} />
       </View>
     );
   };
