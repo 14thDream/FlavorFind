@@ -12,6 +12,7 @@ import { onValue, get, child, ref } from "firebase/database";
 import { db } from "../firebaseConfig";
 import RecipeFeed from "../components/RecipeFeed";
 import { useNavigation } from "@react-navigation/native";
+import SearchHeader from "../components/SearchHeader.js"; 
 import { spacing, colors, fonts } from "../styles";
 import { UserContext } from "../Contexts";
 
@@ -36,6 +37,8 @@ const ProfileScreen = () => {
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [viewMode, setViewMode] = useState("my"); // "my" or "all"
+
 
   const [userId] = useContext(UserContext); // ✅ This gives you the current user's UID
   const navigator = useNavigation();
@@ -56,26 +59,31 @@ const ProfileScreen = () => {
 
     fetchUserDetails();
   }, [userId]);
+  
 
-  const visiblePosts = useMemo(() => {
-    return posts.filter(({ title }) => isSearchableBy(title, searchQuery));
-  }, [posts, searchQuery]);
 
   useEffect(() => {
     const listener = onValue(ref(db, "posts"), (snapshot) => {
-      const posts = Object.values(snapshot.val());
-      setPosts(posts);
+      const data = snapshot.val();
+      setPosts(data ? Object.values(data) : []);
     });
-
+  
     return () => listener();
-  }, []);
+    }, []);
+  
+
+    
+  const visiblePosts = useMemo(() => {
+    const filtered = viewMode === "my" ? posts.filter((post) => post.userId === userId) : posts;
+    return filtered.filter(({ title }) => isSearchableBy(title, searchQuery));
+  }, [posts, searchQuery, viewMode, userId]);
+
+
 
   return (
     <View style={styles.container}>
+      <SearchHeader size={24} color="black" onChangeText={setSearchQuery} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        
-        
-        
         {/* Profile Card */}
         <View style={styles.profileCard}>
           <Image source={{ uri: DefaultProfileURL }} style={styles.profileImage} />
@@ -91,15 +99,14 @@ const ProfileScreen = () => {
 
 
         <View style={styles.buttonBarContainer}>
-          <TouchableOpacity style={styles.containerButtons}>
+          <TouchableOpacity style={styles.containerButtons} onPress={() => setViewMode("my")}>
             <Text style={styles.signOutText}>MY RECIPES</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.containerButtons}>
+          <TouchableOpacity style={styles.containerButtons} onPress={() => setViewMode("all")}>
             <Text style={styles.signOutText}>FAVORITES</Text>
           </TouchableOpacity>
         </View>
-
 
 
 
