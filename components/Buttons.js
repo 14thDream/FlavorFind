@@ -27,10 +27,28 @@ export const LikeButton = ({ size, path }) => {
   };
 
   useEffect(() => {
+    const fetchLikes = async () => {
+      const likedByRef = ref(db, `${path}/likedBy`);
+      const snapshot = await get(likedByRef);
+      const isLiked = snapshot.exists() && snapshot.val()[userId];
+      setIsLiked(isLiked);
+    };
+
     fetchLikes();
   }, [path]);
 
-  useFocusEffect(useCallback(() => fetchLikes(), [path]));
+  useFocusEffect(
+    useCallback(() => {
+      const fetchLikes = async () => {
+        const likedByRef = ref(db, `${path}/likedBy`);
+        const snapshot = await get(likedByRef);
+        const isLiked = snapshot.exists() && snapshot.val()[userId];
+        setIsLiked(isLiked);
+      };
+
+      fetchLikes();
+    }, [path]),
+  );
 
   return (
     <View>
