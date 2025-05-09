@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     alignItems: "center", // This centers the buttons vertically
     paddingVertical: 15,
     paddingHorizontal: 20,
+    gap: spacing.md,
     marginBottom: 10,
   },
   container3: {
@@ -223,6 +224,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   containerButtons: {
+    flex: 1,
     backgroundColor: "#D9D9D9",
     paddingVertical: 10,
     paddingHorizontal: 35,
@@ -234,6 +236,7 @@ const styles = StyleSheet.create({
   signOutText: {
     fontSize: 16,
     fontFamily: fonts?.body || "System",
+    textAlign: "center",
   },
   feed: {
     marginBottom: 10, //spacing for each recipe
